@@ -5,20 +5,20 @@ import { FormEvent, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/Toast";
 
-const PAYPAL_PAYMENT_URL = "https://www.paypal.com/ncp/payment/KAQRZ2HTR97ML";
-
 const PLANS = [
   {
     id: "basic",
-    label: "Basic Check — £9.99",
+    label: "Basic Check — £49.99",
     name: "Basic Check",
-    price: "£9.99",
+    price: "£49.99",
+    paymentUrl: "https://pay.sumup.com/b2c/Q391KWPF",
   },
   {
     id: "full",
-    label: "Full Comprehensive — £19.99",
+    label: "Full Comprehensive — £54.99",
     name: "Full Comprehensive",
-    price: "£19.99",
+    price: "£54.99",
+    paymentUrl: "https://pay.sumup.com/b2c/QM0IAQ2Z",
   },
 ] as const;
 
@@ -62,7 +62,7 @@ export function CheckoutForm() {
     }
 
     setSubmitting(true);
-    window.location.assign(PAYPAL_PAYMENT_URL);
+    window.location.assign(selected.paymentUrl);
   }
 
   return (

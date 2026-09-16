@@ -158,7 +158,7 @@ export function Footer() {
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-space-sm font-label-md text-label-md text-on-surface-variant">
-            {["Stripe", "Visa", "Mastercard", "Apple Pay", "PayPal"].map(
+            {["SumUp", "Visa", "Mastercard", "Apple Pay", "PayPal"].map(
               (label) => (
                 <span
                   key={label}

@@ -93,7 +93,7 @@ export function Pricing() {
               </p>
               <div className="flex items-baseline gap-space-2xs mb-space-lg">
                 <span className="font-display-hero text-[44px] leading-none text-on-surface font-extrabold">
-                  £9.99
+                  £49.99
                 </span>
                 <span className="font-body-md text-body-md text-on-surface-variant">
                   one-off
@@ -145,7 +145,7 @@ export function Pricing() {
               </p>
               <div className="flex items-baseline gap-space-2xs mb-space-lg">
                 <span className="font-display-hero text-[44px] leading-none text-secondary font-extrabold">
-                  £19.99
+                  £54.99
                 </span>
                 <span className="font-body-md text-body-md text-on-surface-variant">
                   one-off
