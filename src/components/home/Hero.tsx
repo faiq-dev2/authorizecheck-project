@@ -53,7 +53,7 @@ export function Hero() {
             verified
           </span>
           <span className="font-label-md text-label-md tracking-wide text-primary-fixed uppercase font-semibold">
-            Official DVLA, Police National Computer &amp; MIAFTR Data Source
+            Official DVLA,National Computer &amp; MIAFTR Data Source
           </span>
         </div>
         <h1 className="font-display-hero text-display-hero max-w-4xl tracking-tight text-white mb-space-md">
