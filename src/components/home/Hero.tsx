@@ -20,6 +20,11 @@ export function Hero() {
       );
       return;
     }
+    try {
+      localStorage.setItem("vdg_reg_number", value);
+    } catch {
+      // Ignore if localStorage unavailable
+    }
     router.push(`/checkout?vrm=${encodeURIComponent(value)}`);
   }
 

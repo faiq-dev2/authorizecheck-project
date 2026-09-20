@@ -38,7 +38,17 @@ export function CheckoutForm() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [vrm, setVrm] = useState(vrmParam);
+  const [vrm, setVrm] = useState(() => {
+    if (vrmParam) return vrmParam;
+    if (typeof window !== "undefined") {
+      try {
+        return localStorage.getItem("vdg_reg_number") || "";
+      } catch {
+        return "";
+      }
+    }
+    return "";
+  });
   const [plan, setPlan] = useState<PlanId>(planParam);
   const [prevParams, setPrevParams] = useState({ plan: planParam, vrm: vrmParam });
   const [terms, setTerms] = useState({
@@ -78,11 +88,42 @@ export function CheckoutForm() {
     setSubmitting(true);
 
     try {
-      const response = await fetch("/api/checkout", {
+      // 1. Create order in database
+      const orderRes = await fetch("/api/create-order", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          regNumber: cleanVrm,
+          planId: selected.id,
+          planName: selected.name,
+          price: selected.price,
+        }),
+      });
+
+      const orderData = await orderRes.json();
+      if (!orderRes.ok || !orderData.success) {
+        showToast(orderData.error || "Failed to initialize order.", "error");
+        setSubmitting(false);
+        return;
+      }
+
+      const orderId = orderData.orderId;
+
+      // 2. Persist order details to localStorage for return fallback
+      try {
+        localStorage.setItem("vdg_order_id", orderId);
+        localStorage.setItem("vdg_reg_number", cleanVrm);
+        localStorage.setItem("vdg_customer_email", email.trim());
+      } catch {
+        // Continue if localStorage blocked
+      }
+
+      // 3. Asynchronously send email notification to checkauthorize@gmail.com
+      fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim(),
@@ -93,25 +134,22 @@ export function CheckoutForm() {
           paymentUrl: selected.paymentUrl,
           terms,
         }),
-      });
+      }).catch((err) => console.warn("Admin notification dispatch note:", err));
 
-      const data = await response.json();
+      showToast("Order initialized! Redirecting to secure payment…", "success");
 
-      if (!response.ok || !data.success) {
-        showToast(
-          data.error || "Failed to submit order notification. Please try again.",
-          "error",
-        );
-        setSubmitting(false);
-        return;
-      }
+      // 4. Redirect customer to payment URL with order ref appended
+      const returnUrl = encodeURIComponent(
+        `${window.location.origin}/thank-you?order=${encodeURIComponent(orderId)}`
+      );
+      const separator = selected.paymentUrl.includes("?") ? "&" : "?";
+      const paymentRedirect = `${selected.paymentUrl}${separator}ref=${encodeURIComponent(orderId)}&redirect=${returnUrl}`;
 
-      showToast("Order registered! Redirecting to payment…", "success");
-
-      // Redirect customer to SumUp payment URL
-      window.location.assign(selected.paymentUrl);
+      // Redirect to external payment provider checkout
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+      window.location.href = paymentRedirect;
     } catch (err: unknown) {
-      console.error("Order submission error:", err);
+      console.error("Order creation error:", err);
       showToast(
         "Unable to submit order. Please check your connection and try again.",
         "error",
