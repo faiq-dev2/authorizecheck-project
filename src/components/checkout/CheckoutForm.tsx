@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/Toast";
 
@@ -32,11 +32,15 @@ function resolvePlan(value: string | null): PlanId {
 export function CheckoutForm() {
   const searchParams = useSearchParams();
   const { showToast } = useToast();
+
+  const planParam = resolvePlan(searchParams.get("plan"));
+  const vrmParam = (searchParams.get("vrm") || "").toUpperCase().replace(/[^A-Z0-9 ]/g, "");
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [plan, setPlan] = useState<PlanId>(() =>
-    resolvePlan(searchParams.get("plan")),
-  );
+  const [vrm, setVrm] = useState(vrmParam);
+  const [plan, setPlan] = useState<PlanId>(planParam);
+  const [prevParams, setPrevParams] = useState({ plan: planParam, vrm: vrmParam });
   const [terms, setTerms] = useState({
     volition: false,
     delivery: false,
@@ -44,14 +48,24 @@ export function CheckoutForm() {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    setPlan(resolvePlan(searchParams.get("plan")));
-  }, [searchParams]);
+  if (prevParams.plan !== planParam || prevParams.vrm !== vrmParam) {
+    setPrevParams({ plan: planParam, vrm: vrmParam });
+    setPlan(planParam);
+    if (vrmParam) {
+      setVrm(vrmParam);
+    }
+  }
 
   const selected = PLANS.find((item) => item.id === plan) ?? PLANS[1];
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const cleanVrm = vrm.trim().toUpperCase();
+    if (!cleanVrm) {
+      showToast("Please enter your Vehicle Registration Mark (VRM).", "error");
+      return;
+    }
 
     if (!terms.volition || !terms.delivery || !terms.policy) {
       showToast(
@@ -62,7 +76,48 @@ export function CheckoutForm() {
     }
 
     setSubmitting(true);
-    window.location.assign(selected.paymentUrl);
+
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          vrm: cleanVrm,
+          planId: selected.id,
+          planName: selected.name,
+          price: selected.price,
+          paymentUrl: selected.paymentUrl,
+          terms,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        showToast(
+          data.error || "Failed to submit order notification. Please try again.",
+          "error",
+        );
+        setSubmitting(false);
+        return;
+      }
+
+      showToast("Order registered! Redirecting to payment…", "success");
+
+      // Redirect customer to SumUp payment URL
+      window.location.assign(selected.paymentUrl);
+    } catch (err: unknown) {
+      console.error("Order submission error:", err);
+      showToast(
+        "Unable to submit order. Please check your connection and try again.",
+        "error",
+      );
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -124,6 +179,43 @@ export function CheckoutForm() {
             type="email"
             value={email}
           />
+        </div>
+
+        <div className="flex flex-col gap-space-2xs">
+          <div className="flex items-center justify-between">
+            <label
+              className="font-label-lg text-label-lg text-on-surface"
+              htmlFor="checkout-vrm"
+            >
+              Vehicle Registration Mark (VRM) <span className="text-error">*</span>
+            </label>
+            <span className="font-body-sm text-body-sm text-on-surface-variant">
+              UK Number Plate
+            </span>
+          </div>
+          <div className="relative flex items-center h-12 rounded-lg overflow-hidden bg-[#FFD200] shadow-sm border border-black/10">
+            <div className="w-10 h-full bg-[#0035bd] flex flex-col items-center justify-center text-white px-1 select-none shrink-0">
+              <span className="text-[10px] font-bold tracking-tighter leading-none">
+                UK
+              </span>
+              <span className="material-symbols-outlined text-[16px] leading-none mt-1">
+                directions_car
+              </span>
+            </div>
+            <input
+              className="w-full h-full bg-transparent px-space-sm text-center font-label-vrm text-label-vrm text-primary uppercase placeholder:text-primary/40 focus:outline-none tracking-wider font-extrabold"
+              id="checkout-vrm"
+              maxLength={8}
+              name="vrm"
+              onChange={(e) =>
+                setVrm(e.target.value.toUpperCase().replace(/[^A-Z0-9 ]/g, ""))
+              }
+              placeholder="e.g. AB21 XYZ"
+              required
+              type="text"
+              value={vrm}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-space-2xs">
@@ -233,14 +325,25 @@ export function CheckoutForm() {
         </div>
 
         <button
-          className="w-full h-12 inline-flex items-center justify-center gap-space-xs rounded-lg bg-secondary-container hover:bg-secondary text-on-secondary font-label-lg text-label-lg font-bold shadow-md hover:shadow-xl transition-all disabled:opacity-60 disabled:pointer-events-none"
+          className="w-full h-12 inline-flex items-center justify-center gap-space-xs rounded-lg bg-secondary-container hover:bg-secondary text-on-secondary font-label-lg text-label-lg font-bold shadow-md hover:shadow-xl transition-all disabled:opacity-60 disabled:pointer-events-none cursor-pointer"
           disabled={submitting}
           type="submit"
         >
-          <span className="material-symbols-outlined text-[20px]">
-            payments
-          </span>
-          <span>{submitting ? "Processing…" : "Process to Payment"}</span>
+          {submitting ? (
+            <>
+              <span className="material-symbols-outlined animate-spin text-[20px]">
+                progress_activity
+              </span>
+              <span>Submitting Order &amp; Redirecting…</span>
+            </>
+          ) : (
+            <>
+              <span className="material-symbols-outlined text-[20px]">
+                payments
+              </span>
+              <span>Process to Payment</span>
+            </>
+          )}
         </button>
       </form>
     </div>

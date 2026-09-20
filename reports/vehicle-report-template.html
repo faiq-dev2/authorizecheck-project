@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vehicle Intelligence Report &mdash; MF18OBG</title>
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', 'Segoe UI', -apple-system, Arial, sans-serif;
+  color: #16213e;
+  background: #eef2f9;
+  -webkit-font-smoothing: antialiased;
+}
+.page {
+  width: 210mm;
+  height: 297mm;
+  background: #ffffff;
+  position: relative;
+  page-break-after: always;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.page:last-child { page-break-after: auto; }
+
+/* ---- header / footer chrome ---- */
+.pg-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9mm 14mm 5mm 14mm;
+  border-bottom: 2px solid #e3e9f5;
+  flex: 0 0 auto;
+}
+.pg-brand { display: flex; align-items: center; gap: 8px; }
+.pg-brand-text { font-size: 15px; font-weight: 800; letter-spacing: -0.2px; }
+.pg-brand-text .b1 { color: #16213e; }
+.pg-brand-text .b2 { color: #2563eb; }
+.pg-section-label {
+  font-size: 10.5px; letter-spacing: 1.2px; text-transform: uppercase;
+  color: #7a869c; font-weight: 700;
+}
+.pg-reg {
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  background: #ffd54a; border: 2px solid #16213e; border-radius: 4px;
+  padding: 3px 10px; font-weight: 800; font-size: 13px; letter-spacing: 1px;
+}
+.pg-body { flex: 1 1 auto; padding: 8mm 14mm 4mm 14mm; overflow: hidden; }
+.pg-footer {
+  flex: 0 0 auto;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 4mm 14mm 7mm 14mm; font-size: 8.5px; color: #9aa5b8;
+  border-top: 1px solid #eef1f8;
+}
+.pg-footer-mid { color: #b7bfcf; }
+
+/* ---- cover page ---- */
+.cover { color: #fff; }
+.cover-page {
+  background: radial-gradient(1200px 700px at 15% -10%, #2f63e0 0%, #14213f 55%, #0b1631 100%);
+  height: 297mm; width: 210mm; position: relative; display: flex; flex-direction: column;
+  page-break-after: always;
+}
+.cover-inner { padding: 16mm 16mm; display: flex; flex-direction: column; height: 100%; }
+.cover-top { display: flex; align-items: center; justify-content: space-between; }
+.cover-brand { display: flex; align-items: center; gap: 10px; }
+.cover-brand-text { font-size: 20px; font-weight: 800; color: #fff; }
+.cover-brand-text .b2 { color: #7fa8ff; }
+.cover-badge {
+  border: 1px solid rgba(255,255,255,0.35); border-radius: 20px; padding: 5px 14px;
+  font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; color: #cfe0ff;
+}
+.cover-mid { margin-top: 22mm; }
+.cover-eyebrow { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #8fb2ff; font-weight: 700; margin-bottom: 10px;}
+.cover-title { font-size: 40px; font-weight: 800; line-height: 1.12; max-width: 140mm; letter-spacing: -0.5px; color: #ffffff; position: relative; z-index: 2;}
+.cover-title span { color: #7fa8ff; }
+.cover-desc { margin-top: 8mm; font-size: 13px; color: #c3d2ef; max-width: 120mm; line-height: 1.7; }
+.cover-plate-row { margin-top: 16mm; display: flex; align-items: center; gap: 14px; }
+.cover-plate {
+  background: #ffd54a; border-radius: 6px; padding: 10px 22px; font-weight: 800;
+  font-size: 26px; color: #16213e; letter-spacing: 2px; border: 3px solid #16213e;
+}
+.cover-vehicle-name { font-size: 16px; font-weight: 700; color: #fff; }
+.cover-vehicle-sub { font-size: 11.5px; color: #9db3dd; margin-top: 2px; }
+.cover-grid { margin-top: 14mm; display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.cover-grid-item {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px; padding: 10px 12px;
+}
+.cover-grid-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #9db3dd; }
+.cover-grid-value { font-size: 15px; font-weight: 800; margin-top: 3px; color: #fff; }
+.cover-illustration { margin-top: 12mm; opacity: 0.9; }
+.cover-bottom {
+  margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end;
+  border-top: 1px solid rgba(255,255,255,0.18); padding-top: 8mm; position: relative; z-index: 2;
+}
+.cover-bottom-item { font-size: 10px; color: #9db3dd; }
+.cover-bottom-item b { display:block; color: #fff; font-size: 12.5px; font-weight: 700; margin-top: 2px;}
+
+/* ---- section title ---- */
+.sec-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6mm; }
+.sec-icon {
+  width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg,#2563eb,#1741a6);
+  display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+}
+.sec-title-row h2 { font-size: 18px; margin: 0; color: #16213e; letter-spacing: -0.2px;}
+.sec-sub { margin: 2px 0 0 0; font-size: 10.5px; color: #7a869c; }
+
+/* ---- tables ---- */
+.info-table { width: 100%; border-collapse: collapse; margin-bottom: 6mm; font-size: 11.5px; }
+.info-table th, .info-table td { padding: 8px 12px; border-bottom: 1px solid #eef1f8; text-align: left; }
+.info-table th { width: 48%; color: #55617a; font-weight: 600; background: #f6f8fd; }
+.info-table td { font-weight: 700; color: #16213e; }
+.info-table tr:last-child th, .info-table tr:last-child td { border-bottom: none; }
+.info-table.cols-2 { }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; }
+
+.card {
+  border: 1px solid #e6ebf5; border-radius: 12px; padding: 10px 14px; margin-bottom: 6mm;
+  background: #fbfcff;
+}
+.card-title { font-size: 11px; font-weight: 800; color: #16213e; margin: 0 0 6px 0; display:flex; align-items:center; gap:6px;}
+
+/* ---- stat tiles ---- */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 6mm; }
+.stat-tile { border: 1px solid #e6ebf5; border-radius: 10px; padding: 10px; text-align: center; background: #f8faff;}
+.stat-tile-icon { display:flex; justify-content:center; margin-bottom:4px;}
+.stat-tile-value { font-size: 17px; font-weight: 800; color: #16213e; }
+.stat-tile-label { font-size: 8.7px; color: #7a869c; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px;}
+
+/* ---- badges ---- */
+.clear-badge {
+  display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid; border-radius: 10px;
+  padding: 9px 14px; font-weight: 700; font-size: 12px; margin-bottom: 5mm;
+}
+.clear-icon {
+  width: 20px; height: 20px; border-radius: 50%; background: currentColor; color: #fff !important;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 12px;
+}
+.clear-icon { position: relative; }
+.clear-badge .clear-icon { background: currentColor; }
+.clear-badge .clear-icon::after { content: attr(data-x); }
+
+.pill { display:inline-block; padding: 2px 10px; border-radius: 20px; font-size: 9.5px; font-weight: 700; }
+.pill-green { background:#eafaf0; color:#16a34a; }
+.pill-amber { background:#fff6e5; color:#c07a00; }
+.pill-blue { background:#eaf1ff; color:#2563eb; }
+
+/* ---- charts ---- */
+.chart-wrap { margin-bottom: 6mm; }
+.axis-label, .bar-label, .bar-val { font-size: 9px; fill: #7a869c; font-family: inherit; }
+.bar-val { fill: #16213e; font-weight: 700; font-size: 9.5px; }
+.gauge-num { font-size: 30px; font-weight: 800; fill: #16213e; }
+.gauge-sub { font-size: 9.5px; fill: #7a869c; }
+
+.co2-scale { margin: 4mm 0 6mm 0; }
+.co2-row { display: flex; align-items: center; height: 21px; margin-bottom: 3px; position: relative; }
+.co2-bar { height: 100%; display:flex; align-items:center; padding-left:8px; border-radius: 0 10px 10px 0; }
+.co2-letter { color: #fff; font-weight: 800; font-size: 11px; }
+.co2-range { margin-left: 10px; font-size: 9.5px; color: #7a869c; }
+.co2-marker { margin-left: auto; margin-right: 6px; font-size: 9.5px; font-weight: 800; color: #16213e; }
+
+/* ---- MOT timeline ---- */
+.mot-item { border: 1px solid #e6ebf5; border-radius: 10px; padding: 10px 14px; margin-bottom: 4mm; }
+.mot-item-head { display: flex; justify-content: space-between; align-items: center; }
+.mot-item-head b { font-size: 12.5px; }
+.mot-date { font-size: 10px; color: #7a869c; }
+.mot-result-pass { color: #16a34a; font-weight: 800; font-size: 11px; }
+.mot-advice { margin-top: 6px; background: #fff8ea; border: 1px solid #ffe2a8; border-radius: 8px; padding: 6px 10px; font-size: 10px; color: #7a5c00; margin-bottom: 4px;}
+.mot-advice b { color:#c07a00; margin-right:5px; }
+
+/* ---- footer-note / disclaimer ---- */
+.disclaimer { font-size: 9.5px; color: #7a869c; line-height: 1.6; background:#f6f8fd; border-radius:10px; padding: 10px 14px; }
+
+/* ---- illustration frame ---- */
+.illustration-frame {
+  border: 1px dashed #c7d2e8; border-radius: 14px; padding: 14px; text-align: center; background: #f8faff;
+}
+.illustration-caption { font-size: 9px; color: #9aa5b8; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; font-weight: 700;}
+
+.owner-card { border: 1px solid #e6ebf5; border-radius: 12px; padding: 12px 14px; }
+.owner-card h4 { margin: 0 0 8px 0; font-size: 12px; color:#2563eb; }
+
+.toc-row { display:flex; align-items:center; padding: 7px 0; border-bottom: 1px dotted #dbe3f2; }
+.toc-num { width: 26px; font-weight: 800; color:#2563eb; font-size:12px;}
+.toc-title { flex:1; font-size: 12px; font-weight:600; }
+.toc-page { font-size: 11px; color:#7a869c; font-weight:700; }
+
+.src-strip { margin-top: 8mm; }
+.src-row { display:flex; flex-wrap:wrap; gap: 10px 22px; }
+.src-item { display:flex; align-items:center; gap:8px; font-size:10.5px; color:#33415c; font-weight:600; }
+
+.page-quote {
+  margin-top: 8mm; border-left: 3px solid #2563eb; padding: 4px 0 4px 14px; font-size: 12px;
+  color: #33415c; font-style: italic; line-height:1.7;
+}
+</style>
+</head>
+<body>
+<div class="cover-page">
+  <div class="cover-inner">
+    <div class="cover-top">
+      <div class="cover-brand">
+        <svg viewBox="0 0 48 56" width="34" height="34">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#ffffff"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+        <div class="cover-brand-text">Authorize<span class="b2">Check</span></div>
+      </div>
+      <div class="cover-badge">Comprehensive UK Due Diligence</div>
+    </div>
+
+    <div class="cover-mid">
+      <div class="cover-eyebrow">Full Vehicle Intelligence Report</div>
+      <div class="cover-title">Everything on record for <span>BMW i8</span></div>
+      <p class="cover-desc">Aggregated from 80+ state and automotive databases &mdash; DVLA status, MOT and mileage
+      history, finance, theft and write-off checks, valuation and previous keepers, compiled into one report.</p>
+
+      <div class="cover-plate-row">
+        <div class="cover-plate">MF18OBG</div>
+        <div>
+          <div class="cover-vehicle-name">BMW i8 &middot; 2018 &middot; Grey</div>
+          <div class="cover-vehicle-sub">Report generated 01 May 2026</div>
+        </div>
+      </div>
+
+      <div class="cover-grid">
+        <div class="cover-grid-item"><div class="cover-grid-label">MOT Status</div><div class="cover-grid-value">Valid</div></div>
+        <div class="cover-grid-item"><div class="cover-grid-label">Finance</div><div class="cover-grid-value">Clear</div></div>
+        <div class="cover-grid-item"><div class="cover-grid-label">Stolen</div><div class="cover-grid-value">Clear</div></div>
+        <div class="cover-grid-item"><div class="cover-grid-label">Write-off</div><div class="cover-grid-value">None</div></div>
+      </div>
+    </div>
+
+    <div class="cover-illustration"><svg viewBox="0 0 620 210" width="100%" style="max-width:620px">
+  <g opacity="0.55"><line x1="70" y1="40" x2="560" y2="40" stroke="#5f8bff" stroke-width="0.6" opacity="0.25"/><line x1="70" y1="54" x2="556" y2="54" stroke="#5f8bff" stroke-width="0.6" opacity="0.23"/><line x1="70" y1="68" x2="552" y2="68" stroke="#5f8bff" stroke-width="0.6" opacity="0.22"/><line x1="70" y1="82" x2="548" y2="82" stroke="#5f8bff" stroke-width="0.6" opacity="0.21"/><line x1="70" y1="96" x2="544" y2="96" stroke="#5f8bff" stroke-width="0.6" opacity="0.19"/><line x1="70" y1="110" x2="540" y2="110" stroke="#5f8bff" stroke-width="0.6" opacity="0.17"/><line x1="70" y1="124" x2="536" y2="124" stroke="#5f8bff" stroke-width="0.6" opacity="0.16"/><line x1="70" y1="138" x2="532" y2="138" stroke="#5f8bff" stroke-width="0.6" opacity="0.15"/><line x1="70" y1="152" x2="528" y2="152" stroke="#5f8bff" stroke-width="0.6" opacity="0.13"/></g>
+  <g fill="none" stroke="#8fb2ff" stroke-width="2.2">
+    <path d="M30 150 C30 128 47 112 74 109 L128 72 C150 52 182 43 220 43 L410 43
+             C443 43 470 56 488 78 L521 109 C554 113 576 126 585 141
+             L585 152 C585 159 578 163 571 163 L553 163"/>
+    <path d="M30 150 L30 141 C30 134 37 130 46 130 L74 130"/>
+    <path d="M553 163 L521 163 M128 163 L57 163"/>
+    <circle cx="140" cy="163" r="29"/>
+    <circle cx="140" cy="163" r="11"/>
+    <circle cx="486" cy="163" r="29"/>
+    <circle cx="486" cy="163" r="11"/>
+    <path d="M163 109 L191 72 L262 72 L262 109 Z"/>
+    <path d="M273 109 L273 72 L382 72 L410 109 Z"/>
+    <line x1="266" y1="72" x2="266" y2="109"/>
+  </g>
+  <circle cx="120" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/><circle cx="166" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/><circle cx="212" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/><circle cx="258" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/><circle cx="304" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/><circle cx="350" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/><circle cx="396" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/><circle cx="442" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/><circle cx="488" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/><circle cx="534" cy="150" r="2.2" fill="#7fa8ff" opacity="0.8"/>
+</svg></div>
+
+    <div class="cover-bottom">
+      <div class="cover-bottom-item">Registration<b>MF18OBG</b></div>
+      <div class="cover-bottom-item">Report reference<b>VI-MF18OBG-01</b></div>
+      <div class="cover-bottom-item">Prepared for<b>Private Buyer Check</b></div>
+      <div class="cover-bottom-item">authorizecheck.co.uk</div>
+    </div>
+  </div>
+</div><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Table of Contents</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M12 11v5M12 8v.01" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+  <div>
+    <h2>Report Contents</h2>
+    <p class="sec-sub">A complete map of every check included in this document</p>
+  </div>
+</div>
+<div class="card" style="padding:14px 18px;"><div class="toc-row"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span><span class="toc-page">Page 3</span></div><div class="toc-row"><span class="toc-num">02</span><span class="toc-title">General Information</span><span class="toc-page">Page 4</span></div><div class="toc-row"><span class="toc-num">03</span><span class="toc-title">Engine & Fuel Consumption</span><span class="toc-page">Page 5</span></div><div class="toc-row"><span class="toc-num">04</span><span class="toc-title">Tyre & Wheel Details</span><span class="toc-page">Page 6</span></div><div class="toc-row"><span class="toc-num">05</span><span class="toc-title">MOT History Overview</span><span class="toc-page">Page 7</span></div><div class="toc-row"><span class="toc-num">06</span><span class="toc-title">MOT Test Timeline</span><span class="toc-page">Page 8</span></div><div class="toc-row"><span class="toc-num">07</span><span class="toc-title">Tax & MOT Status</span><span class="toc-page">Page 10</span></div><div class="toc-row"><span class="toc-num">08</span><span class="toc-title">Finance Check</span><span class="toc-page">Page 11</span></div><div class="toc-row"><span class="toc-num">09</span><span class="toc-title">Damage History</span><span class="toc-page">Page 12</span></div><div class="toc-row"><span class="toc-num">10</span><span class="toc-title">Stolen Status</span><span class="toc-page">Page 13</span></div><div class="toc-row"><span class="toc-num">11</span><span class="toc-title">Mileage Check</span><span class="toc-page">Page 14</span></div><div class="toc-row"><span class="toc-num">12</span><span class="toc-title">Mileage History</span><span class="toc-page">Page 15</span></div><div class="toc-row"><span class="toc-num">13</span><span class="toc-title">Dimensions & Weight</span><span class="toc-page">Page 16</span></div><div class="toc-row"><span class="toc-num">14</span><span class="toc-title">Additional Information</span><span class="toc-page">Page 17</span></div><div class="toc-row"><span class="toc-num">15</span><span class="toc-title">Vehicle Valuation</span><span class="toc-page">Page 18</span></div><div class="toc-row"><span class="toc-num">16</span><span class="toc-title">Owner History & Plate Changes</span><span class="toc-page">Page 19</span></div><div class="toc-row"><span class="toc-num">17</span><span class="toc-title">Glossary & Disclaimer</span><span class="toc-page">Page 20</span></div></div>
+<div class="two-col" style="margin-top:8mm;">
+  <div class="card">
+    <p class="card-title">How to read this report</p>
+    <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Each section opens with a short summary,
+    followed by the detailed data pulled directly from DVLA and industry databases. Green badges mean a check came
+    back clear; amber badges flag an advisory item worth reviewing before purchase.</p>
+  </div>
+  <div class="card">
+    <p class="card-title">Data sources</p>
+    <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">DVLA vehicle register, MOT testing history,
+    DVSA advisory records, insurer write-off registers, HPI finance records, and trade valuation panels, refreshed
+    at the time of purchase.</p>
+  </div>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 2 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Executive Summary</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div>
+    <h2>Executive Summary</h2>
+    <p class="sec-sub">Headline results across every check we ran on MF18OBG</p>
+  </div>
+</div>
+<div class="stat-grid">
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 13l1.5-4A2 2 0 0 1 6.4 8h11.2a2 2 0 0 1 1.9 1.4L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" fill="none" stroke="#2563eb" stroke-width="1.6"/><circle cx="7" cy="17.5" r="1.6" fill="#2563eb"/><circle cx="17" cy="17.5" r="1.6" fill="#2563eb"/></svg></div>
+  <div class="stat-tile-value">BMW i8</div>
+  <div class="stat-tile-label">Make & Model</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+  <div class="stat-tile-value">2018</div>
+  <div class="stat-tile-label">Year of Manufacture</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 15a8 8 0 0 1 16 0" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 15l4-5" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="15" r="1.4" fill="#2563eb"/></svg></div>
+  <div class="stat-tile-value">65,371 mi</div>
+  <div class="stat-tile-label">Last Recorded Mileage</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="8.5" r="3.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
+  <div class="stat-tile-value">2</div>
+  <div class="stat-tile-label">Previous Keepers</div>
+</div>
+</div>
+<div class="two-col">
+  <div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Finance &mdash; Clear</div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Theft &mdash; Clear</div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Written-off &mdash; Clear</div>
+  </div>
+  <div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>MOT &mdash; Valid to 13 Aug 2026</div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Plate changes &mdash; None found</div>
+    <div class="clear-badge" style="background:#fdecec;border-color:#dc2626;color:#dc2626"><span class="clear-icon">✗</span>MOT advisories &mdash; 2 to review</div>
+  </div>
+</div>
+<div class="card">
+  <p class="card-title">Summary verdict</p>
+  <p style="font-size:11px;color:#33415c;line-height:1.75;margin:0;">
+  This BMW i8 has a fully clear finance, theft and insurance write-off record, with five
+  consecutive MOT passes and no failed items. The only points noted across the vehicle's history are two tyre-wear
+  advisories on the most recent MOT test &mdash; worth inspecting before purchase, but not a barrier to a sale.
+  Mileage has increased consistently year-on-year with no irregular jumps recorded.
+  </p>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 3 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">General Information</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 13l1.5-4A2 2 0 0 1 6.4 8h11.2a2 2 0 0 1 1.9 1.4L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="7" cy="17.5" r="1.6" fill="#fff"/><circle cx="17" cy="17.5" r="1.6" fill="#fff"/></svg></div>
+  <div>
+    <h2>General Information</h2>
+    <p class="sec-sub">Basic vehicle specification and identity details</p>
+  </div>
+</div>
+<div class="two-col">
+  <div><table class="info-table cols-1"><tbody><tr><th>Make</th><td>BMW</td></tr><tr><th>Model</th><td>i8</td></tr><tr><th>Colour</th><td>Grey</td></tr><tr><th>Year of Manufacture</th><td>2018</td></tr><tr><th>Gearbox</th><td>6 speed Automatic</td></tr><tr><th>Top Speed</th><td>155 mph</td></tr></tbody></table></div>
+  <div class="illustration-frame">
+    <svg viewBox="0 0 520 230" width="100%" style="max-width:520px" class="car-outline">
+  <g fill="none" stroke="#0f2a5e" stroke-width="2.2" >
+    <path d="M120 20 C90 20 70 40 65 70 L55 95 L40 100 C30 103 25 112 25 122 L25 150
+             C25 160 32 168 42 168 L60 168 C64 180 76 190 90 190 L430 190
+             C444 190 456 180 460 168 L478 168 C488 168 495 160 495 150 L495 122
+             C495 112 490 103 480 100 L465 95 L455 70 C450 40 430 20 400 20 Z"/>
+    <path d="M100 70 L110 40 C118 30 132 25 150 25 L370 25 C388 25 402 30 410 40 L420 70 Z"/>
+    <line x1="260" y1="25" x2="260" y2="70"/>
+    <line x1="100" y1="70" x2="420" y2="70"/>
+    <circle cx="120" cy="168" r="20"/>
+    <circle cx="400" cy="168" r="20"/>
+    <circle cx="120" cy="70" r="4"/>
+    <circle cx="400" cy="70" r="4"/>
+  </g>
+</svg>
+    <div class="illustration-caption">Top-down reference outline &middot; i8 coupe</div>
+  </div>
+</div>
+<div class="card">
+  <p class="card-title">Identity check</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Recorded make, model and colour match
+  the details held against registration <b>MF18OBG</b> on the DVLA vehicle register at the time this report
+  was generated, with no discrepancies flagged.</p>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 4 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Engine & Fuel Consumption</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="9" width="13" height="8" rx="1" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M16 12h3l2 2v3h-5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M6 9V6h3v3M10 9V6h2v3" fill="none" stroke="#fff" stroke-width="1.6"/></svg></div>
+  <div>
+    <h2>Engine & Fuel Consumption</h2>
+    <p class="sec-sub">Technical specification and environmental data</p>
+  </div>
+</div>
+<div class="two-col">
+  <div><table class="info-table cols-1"><tbody><tr><th>Power</th><td>357 BHP</td></tr><tr><th>Max. Torque</th><td>570 Nm at 3,700 rpm</td></tr><tr><th>Engine Capacity</th><td>1499 cc</td></tr><tr><th>Cylinders</th><td>3</td></tr><tr><th>Fuel Type</th><td>Petrol / Electric</td></tr><tr><th>Consumption Combined</th><td>134.5 mpg</td></tr><tr><th>CO2 Emission</th><td>49 g/km</td></tr><tr><th>CO2 Label</th><td>A</td></tr></tbody></table></div>
+  <div>
+    <div class="card" style="text-align:center;padding:14px;">
+      <svg viewBox="0 0 180 180" width="180" height="180" class="gauge-svg">
+  <path d="M 162.00 90.00 A 72.0 72.0 0 1 1 162.00 90.00" fill="none" stroke="#e5edff" stroke-width="16" stroke-linecap="butt"/>
+  <path d="M 90.00 18.00 A 72.0 72.0 0 1 1 19.28 103.49" fill="none" stroke="#2563eb" stroke-width="16" stroke-linecap="round"/>
+  <text x="90.0" y="84.0" text-anchor="middle" class="gauge-num">357</text>
+  <text x="90.0" y="110.0" text-anchor="middle" class="gauge-sub">BHP output</text>
+</svg>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <p class="card-title">CO2 Emissions Label</p>
+  <div class="co2-scale"><div class="co2-row"><div class="co2-bar" style="width:60px;background:#0f9d58"><span class="co2-letter">A</span></div><span class="co2-range">0 < 101 g/km</span><span class="co2-marker">◀ THIS VEHICLE</span></div><div class="co2-row"><div class="co2-bar" style="width:86px;background:#4caf50"><span class="co2-letter">B</span></div><span class="co2-range">101 - 120 g/km</span></div><div class="co2-row"><div class="co2-bar" style="width:112px;background:#8bc34a"><span class="co2-letter">C</span></div><span class="co2-range">121 - 140 g/km</span></div><div class="co2-row"><div class="co2-bar" style="width:138px;background:#cddc39"><span class="co2-letter">D</span></div><span class="co2-range">141 - 165 g/km</span></div><div class="co2-row"><div class="co2-bar" style="width:164px;background:#ffc107"><span class="co2-letter">E</span></div><span class="co2-range">166 - 185 g/km</span></div><div class="co2-row"><div class="co2-bar" style="width:190px;background:#ff9800"><span class="co2-letter">F</span></div><span class="co2-range">186 - 225 g/km</span></div><div class="co2-row"><div class="co2-bar" style="width:216px;background:#e53935"><span class="co2-letter">G</span></div><span class="co2-range">225+ g/km</span></div></div>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 5 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Tyre & Wheel Details</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="8" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3" fill="none" stroke="#fff" stroke-width="1.6"/></svg></div>
+  <div>
+    <h2>Tyre & Wheel Details</h2>
+    <p class="sec-sub">Factory tyre sizes, pressures and fitment</p>
+  </div>
+</div>
+<div class="two-col">
+  <div><table class="info-table cols-1"><tbody><tr><th>Tyre Data Model</th><td>i8 Coupe</td></tr><tr><th>Engine Power (kW)</th><td>266 kW</td></tr><tr><th>Standard Fitment</th><td>Yes</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Front Tyre Size</th><td>195/50R20</td></tr><tr><th>Rear Tyre Size</th><td>215/45R20</td></tr><tr><th>Front Pressure</th><td>2.20 bar / 32.00 psi</td></tr><tr><th>Rear Pressure</th><td>2.20 bar / 32.00 psi</td></tr><tr><th>Wheel / Hub</th><td>PCD 5x112 | Centre bore 66.70 mm</td></tr></tbody></table></div>
+</div>
+<div class="two-col">
+  <div class="card" style="text-align:center;">
+    <svg viewBox="0 0 150 150" width="150" height="150" class="gauge-svg">
+  <path d="M 132.00 75.00 A 57.0 57.0 0 1 1 132.00 75.00" fill="none" stroke="#e5edff" stroke-width="16" stroke-linecap="butt"/>
+  <path d="M 75.00 18.00 A 57.0 57.0 0 1 1 35.98 33.45" fill="none" stroke="#2563eb" stroke-width="16" stroke-linecap="round"/>
+  <text x="75.0" y="69.0" text-anchor="middle" class="gauge-num">32 psi</text>
+  <text x="75.0" y="95.0" text-anchor="middle" class="gauge-sub">Front & rear pressure</text>
+</svg>
+  </div>
+  <div class="card">
+    <p class="card-title">Tyre wear note</p>
+    <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">The most recent MOT recorded both nearside
+    and offside front tyres worn close to the legal limit. Budget for a front tyre replacement shortly after
+    purchase &mdash; see the MOT Test Timeline on page 8 for the exact advisory wording.</p>
+  </div>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 6 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">MOT History</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div>
+    <h2>MOT History Overview</h2>
+    <p class="sec-sub">Vehicle MOT test results and pass statistics</p>
+  </div>
+</div>
+<div class="two-col">
+  <div class="card" style="text-align:center;">
+    <svg viewBox="0 0 180 180" width="180" height="180" class="gauge-svg">
+  <path d="M 162.00 90.00 A 72.0 72.0 0 1 1 162.00 90.00" fill="none" stroke="#e5edff" stroke-width="16" stroke-linecap="butt"/>
+  <path d="M 90.00 18.00 A 72.0 72.0 0 1 1 89.95 18.00" fill="none" stroke="#16a34a" stroke-width="16" stroke-linecap="round"/>
+  <text x="90.0" y="84.0" text-anchor="middle" class="gauge-num">100%</text>
+  <text x="90.0" y="110.0" text-anchor="middle" class="gauge-sub">Pass rate</text>
+</svg>
+  </div>
+  <div><table class="info-table cols-1"><tbody><tr><th>MOT Expiry Date</th><td>13 Aug 2026</td></tr><tr><th>Tests Passed</th><td>5</td></tr><tr><th>Tests Failed</th><td>0</td></tr><tr><th>Total Advice Items</th><td>2</td></tr><tr><th>Total Items Failed</th><td>0</td></tr></tbody></table></div>
+</div>
+<div class="stat-grid">
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="stat-tile-value">5</div>
+  <div class="stat-tile-label">MOTs Passed</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 11v5M12 8v.01" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+  <div class="stat-tile-value">2</div>
+  <div class="stat-tile-label">Advisories Logged</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+  <div class="stat-tile-value">5 yrs</div>
+  <div class="stat-tile-label">Testing History Span</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 15a8 8 0 0 1 16 0" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 15l4-5" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="15" r="1.4" fill="#2563eb"/></svg></div>
+  <div class="stat-tile-value">13 Aug 2026</div>
+  <div class="stat-tile-label">Current Expiry</div>
+</div>
+</div>
+<div class="card src-strip"><p class="card-title" style="margin-bottom:8px;">Sources checked for this section</p><div class="src-row"><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg><span>DVSA MOT testing history</span></div><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>DVLA vehicle register</span></div><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 11v5M12 8v.01" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg><span>Manufacturer recall database</span></div></div></div>
+<div class="page-quote">"Five consecutive MOT passes with zero failed items is a strong, consistent track record for a
+performance hybrid of this age."</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 7 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">MOT History</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+  <div>
+    <h2>MOT Test Timeline</h2>
+    <p class="sec-sub">Chronological record of every recorded MOT test (1 of 2)</p>
+  </div>
+</div>
+<div class="mot-item">
+  <div class="mot-item-head">
+    <b>MOT #5</b>
+    <span class="mot-result-pass">Passed</span>
+  </div>
+  <div class="mot-date">Tested 13 Aug 2025, 08:02 &middot; next expiry 13 Aug 2026</div>
+  <div class="mot-advice"><b>Advisory</b>Nearside Front Tyre worn close to legal limit/worn on edge (5.2.3 (e))</div><div class="mot-advice"><b>Advisory</b>Offside Front Tyre worn close to legal limit/worn on edge (5.2.3 (e))</div>
+</div><div class="mot-item">
+  <div class="mot-item-head">
+    <b>MOT #4</b>
+    <span class="mot-result-pass">Passed</span>
+  </div>
+  <div class="mot-date">Tested 14 Aug 2024, 07:59 &middot; next expiry 13 Aug 2025</div>
+  
+</div><div class="mot-item">
+  <div class="mot-item-head">
+    <b>MOT #3</b>
+    <span class="mot-result-pass">Passed</span>
+  </div>
+  <div class="mot-date">Tested 14 Aug 2023, 07:13 &middot; next expiry 14 Aug 2024</div>
+  
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 8 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">MOT History</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+  <div>
+    <h2>MOT Test Timeline</h2>
+    <p class="sec-sub">Chronological record of every recorded MOT test (2 of 2)</p>
+  </div>
+</div>
+<div class="mot-item">
+  <div class="mot-item-head">
+    <b>MOT #2</b>
+    <span class="mot-result-pass">Passed</span>
+  </div>
+  <div class="mot-date">Tested 23 Jun 2022, 11:56 &middot; next expiry 14 Aug 2023</div>
+  
+</div><div class="mot-item">
+  <div class="mot-item-head">
+    <b>MOT #1</b>
+    <span class="mot-result-pass">Passed</span>
+  </div>
+  <div class="mot-date">Tested 18 Jun 2021, 09:46 &middot; next expiry 23 Jun 2022</div>
+  
+</div>
+<div class="card" style="margin-top:6mm;">
+  <p class="card-title">Reading the timeline</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Every test in this vehicle's five-year MOT
+  history returned a pass, with only the two tyre-wear advisories noted on the most recent test in 2025. No dangerous
+  or major defects have been recorded at any point.</p>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 9 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Tax & MOT Check</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="4" y="5" width="16" height="14" rx="1.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M8 9h8M8 13h8M8 17h5" stroke="#fff" stroke-width="1.6"/></svg></div>
+  <div>
+    <h2>Tax & MOT Check</h2>
+    <p class="sec-sub">Vehicle tax and MOT status information</p>
+  </div>
+</div>
+<div class="two-col">
+  <div><table class="info-table cols-1"><tbody><tr><th>Days Left</th><td>104</td></tr><tr><th>MOT Expiry Date</th><td>13 Aug 2026</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Tax Band</th><td>A</td></tr><tr><th>Single Payment (12 months)</th><td>£115</td></tr></tbody></table></div>
+</div>
+<div class="card" style="text-align:center;">
+  <svg viewBox="0 0 180 180" width="180" height="180" class="gauge-svg">
+  <path d="M 162.00 90.00 A 72.0 72.0 0 1 1 162.00 90.00" fill="none" stroke="#e5edff" stroke-width="16" stroke-linecap="butt"/>
+  <path d="M 90.00 18.00 A 72.0 72.0 0 0 1 160.72 103.49" fill="none" stroke="#2563eb" stroke-width="16" stroke-linecap="round"/>
+  <text x="90.0" y="84.0" text-anchor="middle" class="gauge-num">104</text>
+  <text x="90.0" y="110.0" text-anchor="middle" class="gauge-sub">days of MOT remaining</text>
+</svg>
+</div>
+<div class="card src-strip"><p class="card-title" style="margin-bottom:8px;">Sources checked for this section</p><div class="src-row"><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><rect x="4" y="5" width="16" height="14" rx="1.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M8 9h8M8 13h8M8 17h5" stroke="#2563eb" stroke-width="1.6"/></svg><span>DVLA vehicle tax status</span></div><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg><span>DVSA MOT expiry calendar</span></div><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 10l8-5 8 5" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18" stroke="#2563eb" stroke-width="1.6"/></svg><span>Road tax band calculator</span></div></div></div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 10 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Finance Check</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 10l8-5 8 5" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18" stroke="#fff" stroke-width="1.6"/></svg></div>
+  <div>
+    <h2>Finance Check</h2>
+    <p class="sec-sub">Outstanding finance and loan information</p>
+  </div>
+</div>
+<div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Clear &mdash; No outstanding loans or financial agreements on this vehicle.</div>
+<div class="card">
+  <p class="card-title">What we searched</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">We cross-referenced MF18OBG against
+  the national finance register covering hire purchase (HP), personal contract purchase (PCP) and other secured
+  lending agreements. No active or historic agreement was found tied to this vehicle identification number.</p>
+</div>
+<div class="stat-grid">
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 10l8-5 8 5" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18" stroke="#2563eb" stroke-width="1.6"/></svg></div>
+  <div class="stat-tile-value">0</div>
+  <div class="stat-tile-label">Active Agreements</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 10l8-5 8 5" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18" stroke="#2563eb" stroke-width="1.6"/></svg></div>
+  <div class="stat-tile-value">0</div>
+  <div class="stat-tile-label">Historic Agreements</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="stat-tile-value">Clear</div>
+  <div class="stat-tile-label">Register Result</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+  <div class="stat-tile-value">01 May 2026</div>
+  <div class="stat-tile-label">Checked On</div>
+</div>
+</div>
+<div class="card src-strip"><p class="card-title" style="margin-bottom:8px;">Sources checked for this section</p><div class="src-row"><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4 10l8-5 8 5" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18" stroke="#2563eb" stroke-width="1.6"/></svg><span>National finance register</span></div><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>HPI-style lender network</span></div><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 11v5M12 8v.01" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg><span>Secured lending database</span></div></div></div>
+<div class="page-quote">"A clear finance result means no lender has a legal interest in this vehicle at the time
+of checking &mdash; always worth re-confirming on the day of purchase."</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 11 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Damage History</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 13l1.5-4A2 2 0 0 1 6.4 8h11.2a2 2 0 0 1 1.9 1.4L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="7" cy="17.5" r="1.6" fill="#fff"/><circle cx="17" cy="17.5" r="1.6" fill="#fff"/></svg></div>
+  <div>
+    <h2>Damage History</h2>
+    <p class="sec-sub">Accident and damage records</p>
+  </div>
+</div>
+<div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Clear &mdash; No record of accidents or damage reported for this vehicle.</div>
+<div class="illustration-frame">
+  <svg viewBox="0 0 520 230" width="100%" style="max-width:520px" class="car-outline">
+  <g fill="none" stroke="#0f2a5e" stroke-width="2.2" stroke-dasharray="4 3">
+    <path d="M120 20 C90 20 70 40 65 70 L55 95 L40 100 C30 103 25 112 25 122 L25 150
+             C25 160 32 168 42 168 L60 168 C64 180 76 190 90 190 L430 190
+             C444 190 456 180 460 168 L478 168 C488 168 495 160 495 150 L495 122
+             C495 112 490 103 480 100 L465 95 L455 70 C450 40 430 20 400 20 Z"/>
+    <path d="M100 70 L110 40 C118 30 132 25 150 25 L370 25 C388 25 402 30 410 40 L420 70 Z"/>
+    <line x1="260" y1="25" x2="260" y2="70"/>
+    <line x1="100" y1="70" x2="420" y2="70"/>
+    <circle cx="120" cy="168" r="20"/>
+    <circle cx="400" cy="168" r="20"/>
+    <circle cx="120" cy="70" r="4"/>
+    <circle cx="400" cy="70" r="4"/>
+  </g>
+</svg>
+  <div class="illustration-caption">No recorded impact zones &middot; reference diagram only</div>
+</div>
+<div class="card" style="margin-top:6mm;">
+  <p class="card-title">What this check covers</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Insurer-submitted accident and repair records,
+  salvage auction listings, and total-loss Category A/B/S/N markers are all checked against this vehicle
+  identification number. None were found.</p>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 12 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Stolen Status</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="5" y="11" width="14" height="9" rx="1.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#fff" stroke-width="1.6"/></svg></div>
+  <div>
+    <h2>Stolen Status</h2>
+    <p class="sec-sub">Theft and security status check</p>
+  </div>
+</div>
+<div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Clear &mdash; No theft record found.</div>
+<div class="card">
+  <p class="card-title">What we searched</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">MF18OBG was checked against the Police
+  National Computer stolen vehicle register and insurer-reported theft records. No match was returned at the time
+  of this report.</p>
+</div>
+<div class="stat-grid">
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><rect x="5" y="11" width="14" height="9" rx="1.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
+  <div class="stat-tile-value">Clear</div>
+  <div class="stat-tile-label">PNC Stolen Register</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><rect x="5" y="11" width="14" height="9" rx="1.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
+  <div class="stat-tile-value">Clear</div>
+  <div class="stat-tile-label">Insurer Theft Record</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="stat-tile-value">0</div>
+  <div class="stat-tile-label">Open Theft Reports</div>
+</div>
+  <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+  <div class="stat-tile-value">01 May 2026</div>
+  <div class="stat-tile-label">Checked On</div>
+</div>
+</div>
+<div class="card src-strip"><p class="card-title" style="margin-bottom:8px;">Sources checked for this section</p><div class="src-row"><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><rect x="5" y="11" width="14" height="9" rx="1.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg><span>Police National Computer</span></div><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Insurer theft register</span></div><div class="src-item"><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 11v5M12 8v.01" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg><span>DVLA keeper alerts</span></div></div></div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 13 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Mileage Check</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 15a8 8 0 0 1 16 0" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M12 15l4-5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="15" r="1.4" fill="#fff"/></svg></div>
+  <div>
+    <h2>Mileage Check</h2>
+    <p class="sec-sub">Odometer readings and mileage history</p>
+  </div>
+</div>
+<div class="two-col">
+  <div><table class="info-table cols-1"><tbody><tr><th>Odometer Unit</th><td>In miles</td></tr><tr><th>Mileage Registrations</th><td>5</td></tr><tr><th>First Registration</th><td>18 Jun 2021</td></tr><tr><th>Last Registration</th><td>13 Aug 2025</td></tr></tbody></table></div>
+  <div class="card">
+    <p class="card-title">Consistency check</p>
+    <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Mileage has risen steadily at every
+    recorded reading with no backwards jumps or unexplained gaps &mdash; a strong signal against clocking.</p>
+  </div>
+</div>
+<div class="card">
+  <p class="card-title">Mileage over time</p>
+  <svg viewBox="0 0 680 260" width="100%" class="chart-svg">
+  <defs>
+    <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2563eb" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <line x1="68" y1="214.0" x2="660" y2="214.0" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="218.0" text-anchor="end" class="axis-label">0</text><line x1="68" y1="166.5" x2="660" y2="166.5" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="170.5" text-anchor="end" class="axis-label">18,794</text><line x1="68" y1="119.0" x2="660" y2="119.0" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="123.0" text-anchor="end" class="axis-label">37,588</text><line x1="68" y1="71.5" x2="660" y2="71.5" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="75.5" text-anchor="end" class="axis-label">56,382</text><line x1="68" y1="24.0" x2="660" y2="24.0" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="28.0" text-anchor="end" class="axis-label">75,177</text>
+  <line x1="68" y1="214" x2="660" y2="214" stroke="#c7d2e8" stroke-width="1.5"/>
+  <path d="M 68.0 159.9 L 216.0 107.8 L 364.0 80.1 L 512.0 65.1 L 660.0 48.8 L 660.0 214.0 L 68.0 214.0 Z" fill="url(#lineFill)"/>
+  <path d="M 68.0 159.9 L 216.0 107.8 L 364.0 80.1 L 512.0 65.1 L 660.0 48.8" fill="none" stroke="#2563eb" stroke-width="3"/>
+  <circle cx="68.0" cy="159.9" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="68.0" y="147.9" text-anchor="middle" class="bar-val">21,394 mi</text><circle cx="216.0" cy="107.8" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="216.0" y="95.8" text-anchor="middle" class="bar-val">42,024 mi</text><circle cx="364.0" cy="80.1" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="364.0" y="68.1" text-anchor="middle" class="bar-val">52,995 mi</text><circle cx="512.0" cy="65.1" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="512.0" y="53.1" text-anchor="middle" class="bar-val">58,926 mi</text><circle cx="660.0" cy="48.8" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="660.0" y="36.8" text-anchor="middle" class="bar-val">65,371 mi</text>
+  <text x="68.0" y="236.0" text-anchor="middle" class="bar-label">18 Jun</text><text x="216.0" y="236.0" text-anchor="middle" class="bar-label">23 Jun</text><text x="364.0" y="236.0" text-anchor="middle" class="bar-label">14 Aug</text><text x="512.0" y="236.0" text-anchor="middle" class="bar-label">14 Aug</text><text x="660.0" y="236.0" text-anchor="middle" class="bar-label">13 Aug</text>
+</svg>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 14 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Mileage History</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 15a8 8 0 0 1 16 0" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M12 15l4-5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="15" r="1.4" fill="#fff"/></svg></div>
+  <div>
+    <h2>Mileage History</h2>
+    <p class="sec-sub">Full log of every mileage registration on record</p>
+  </div>
+</div>
+<table class="info-table" style="font-size:11px;">
+  <thead><tr><th style="background:#eaf1ff;">Registration</th><th style="background:#eaf1ff;">Date</th><th style="background:#eaf1ff;">Mileage</th></tr></thead>
+  <tbody><tr><td>Registration #1</td><td>18 Jun 2021</td><td>21,394 mi</td></tr><tr><td>Registration #2</td><td>23 Jun 2022</td><td>42,024 mi</td></tr><tr><td>Registration #3</td><td>14 Aug 2023</td><td>52,995 mi</td></tr><tr><td>Registration #4</td><td>14 Aug 2024</td><td>58,926 mi</td></tr><tr><td>Registration #5</td><td>13 Aug 2025</td><td>65,371 mi</td></tr></tbody>
+</table>
+<div class="card">
+  <p class="card-title">Average annual mileage</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Across the five recorded readings this vehicle
+  has averaged approximately <b>10,994 miles per year</b>,
+  broadly in line with what is typical for a car of this age and class.</p>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 15 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Dimensions & Weight</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="9" width="18" height="6" rx="1" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M7 9v3M11 9v3M15 9v3M19 9v2" stroke="#fff" stroke-width="1.6"/></svg></div>
+  <div>
+    <h2>Dimensions & Weight</h2>
+    <p class="sec-sub">Physical specifications and measurements</p>
+  </div>
+</div>
+<div class="two-col">
+  <div><table class="info-table cols-1"><tbody><tr><th>Width</th><td>1,942 mm</td></tr><tr><th>Height</th><td>1,297 mm</td></tr><tr><th>Length</th><td>4,689 mm</td></tr><tr><th>Wheel Base</th><td>2,800 mm</td></tr><tr><th>Kerb Weight</th><td>1,485 kg</td></tr><tr><th>Max. Allowed Weight</th><td>1,870 kg</td></tr></tbody></table></div>
+  <div class="illustration-frame">
+    <svg viewBox="0 0 560 170" width="100%" style="max-width:560px">
+  <g fill="none" stroke="#2563eb" stroke-width="2.4">
+    <path d="M20 130 C20 110 35 95 60 92 L110 60 C130 42 160 34 195 34 L370 34
+             C400 34 424 46 440 66 L470 92 C500 96 520 108 528 122
+             L528 132 C528 138 522 142 516 142 L500 142"/>
+    <path d="M20 130 L20 122 C20 116 26 112 34 112 L60 112"/>
+    <path d="M500 142 L470 142 M110 142 L44 142"/>
+    <circle cx="120" cy="142" r="26"/>
+    <circle cx="120" cy="142" r="10"/>
+    <circle cx="440" cy="142" r="26"/>
+    <circle cx="440" cy="142" r="10"/>
+    <path d="M140 92 L165 60 L230 60 L230 92 Z"/>
+    <path d="M240 92 L240 60 L340 60 L365 92 Z"/>
+    <line x1="234" y1="60" x2="234" y2="92"/>
+  </g>
+</svg>
+    <div class="illustration-caption">Side profile reference &middot; not to exact scale</div>
+  </div>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 16 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Additional Information</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M12 11v5M12 8v.01" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+  <div>
+    <h2>Additional Information</h2>
+    <p class="sec-sub">Vehicle configuration and identifiers</p>
+  </div>
+</div>
+<div class="two-col">
+  <div><table class="info-table cols-1"><tbody><tr><th>Fuel Tank Capacity</th><td>42 L</td></tr><tr><th>Number of Doors</th><td>3</td></tr><tr><th>Number of Seats</th><td>4</td></tr><tr><th>Number of Axles</th><td>2</td></tr><tr><th>Engine Number</th><td>A031P619</td></tr></tbody></table></div>
+  <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);">
+    <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 13l1.5-4A2 2 0 0 1 6.4 8h11.2a2 2 0 0 1 1.9 1.4L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" fill="none" stroke="#2563eb" stroke-width="1.6"/><circle cx="7" cy="17.5" r="1.6" fill="#2563eb"/><circle cx="17" cy="17.5" r="1.6" fill="#2563eb"/></svg></div>
+  <div class="stat-tile-value">3</div>
+  <div class="stat-tile-label">Doors</div>
+</div>
+    <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="8.5" r="3.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
+  <div class="stat-tile-value">4</div>
+  <div class="stat-tile-label">Seats</div>
+</div>
+    <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8" fill="none" stroke="#2563eb" stroke-width="1.6"/><circle cx="12" cy="12" r="3" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
+  <div class="stat-tile-value">2</div>
+  <div class="stat-tile-label">Axles</div>
+</div>
+    <div class="stat-tile">
+  <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="9" width="13" height="8" rx="1" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M16 12h3l2 2v3h-5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M6 9V6h3v3M10 9V6h2v3" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
+  <div class="stat-tile-value">42 L</div>
+  <div class="stat-tile-label">Fuel Tank</div>
+</div>
+  </div>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 17 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Vehicle Valuation</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><ellipse cx="9" cy="8" rx="6" ry="3" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M3 8v4c0 1.7 2.7 3 6 3s6-1.3 6-3V8" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M9 15v1c0 1.7 3 3 6.5 3s6.5-1.3 6.5-3-2.9-3-6.5-3c-.7 0-1.3 0-1.9.1" fill="none" stroke="#fff" stroke-width="1.6"/></svg></div>
+  <div>
+    <h2>Vehicle Valuation</h2>
+    <p class="sec-sub">Market and trade-in value estimates</p>
+  </div>
+</div>
+<div class="card"><svg viewBox="0 0 680 300" width="100%" class="chart-svg">
+  <line x1="64" y1="230.0" x2="660" y2="230.0" stroke="#e6ebf5" stroke-width="1"/><text x="54" y="234.0" text-anchor="end" class="axis-label">£0</text><line x1="64" y1="177.5" x2="660" y2="177.5" stroke="#e6ebf5" stroke-width="1"/><text x="54" y="181.5" text-anchor="end" class="axis-label">£9,307</text><line x1="64" y1="125.0" x2="660" y2="125.0" stroke="#e6ebf5" stroke-width="1"/><text x="54" y="129.0" text-anchor="end" class="axis-label">£18,614</text><line x1="64" y1="72.5" x2="660" y2="72.5" stroke="#e6ebf5" stroke-width="1"/><text x="54" y="76.5" text-anchor="end" class="axis-label">£27,921</text><line x1="64" y1="20.0" x2="660" y2="20.0" stroke="#e6ebf5" stroke-width="1"/><text x="54" y="24.0" text-anchor="end" class="axis-label">£37,228</text>
+  <line x1="64" y1="230" x2="660" y2="230" stroke="#c7d2e8" stroke-width="1.5"/>
+  <rect x="64.0" y="42.5" width="62.2" height="187.5" rx="4" fill="#2563eb"/><text x="95.1" y="34.5" text-anchor="middle" class="bar-val">£33,239</text><text x="95.1" y="248.0" text-anchor="middle" class="bar-label">Dealer</text><text x="95.1" y="261.0" text-anchor="middle" class="bar-label">Forecourt</text><rect x="140.2" y="53.4" width="62.2" height="176.6" rx="4" fill="#2563eb"/><text x="171.4" y="45.4" text-anchor="middle" class="bar-val">£31,304</text><text x="171.4" y="248.0" text-anchor="middle" class="bar-label">Trade</text><text x="171.4" y="261.0" text-anchor="middle" class="bar-label">Retail</text><rect x="216.5" y="67.7" width="62.2" height="162.3" rx="4" fill="#f59e0b"/><text x="247.6" y="59.7" text-anchor="middle" class="bar-val">£28,778</text><text x="247.6" y="248.0" text-anchor="middle" class="bar-label">Private</text><text x="247.6" y="261.0" text-anchor="middle" class="bar-label">Clean</text><rect x="292.8" y="72.8" width="62.2" height="157.2" rx="4" fill="#2563eb"/><text x="323.9" y="64.8" text-anchor="middle" class="bar-val">£27,864</text><text x="323.9" y="248.0" text-anchor="middle" class="bar-label">Avg Private</text><text x="323.9" y="261.0" text-anchor="middle" class="bar-label">Trade</text><rect x="369.0" y="74.2" width="62.2" height="155.8" rx="4" fill="#2563eb"/><text x="400.1" y="66.2" text-anchor="middle" class="bar-val">£27,615</text><text x="400.1" y="248.0" text-anchor="middle" class="bar-label">Part</text><text x="400.1" y="261.0" text-anchor="middle" class="bar-label">Exchange</text><rect x="445.2" y="77.8" width="62.2" height="152.2" rx="4" fill="#2563eb"/><text x="476.4" y="69.8" text-anchor="middle" class="bar-val">£26,990</text><text x="476.4" y="248.0" text-anchor="middle" class="bar-label">Auction</text><text x="476.4" y="261.0" text-anchor="middle" class="bar-label">Value</text><rect x="521.5" y="83.0" width="62.2" height="147.0" rx="4" fill="#2563eb"/><text x="552.6" y="75.0" text-anchor="middle" class="bar-val">£26,059</text><text x="552.6" y="248.0" text-anchor="middle" class="bar-label">Trade</text><text x="552.6" y="261.0" text-anchor="middle" class="bar-label">Average</text><rect x="597.8" y="99.9" width="62.2" height="130.1" rx="4" fill="#2563eb"/><text x="628.9" y="91.9" text-anchor="middle" class="bar-val">£23,068</text><text x="628.9" y="248.0" text-anchor="middle" class="bar-label">Trade Poor</text>
+</svg></div>
+<div class="two-col">
+  <div><table class="info-table cols-1"><tbody><tr><th>On The Road (new)</th><td>£103,810</td></tr><tr><th>Valuation Mileage</th><td>73,731 mi</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Valuation Book</th><td>Direct</td></tr><tr><th>First MOT Registration</th><td>07 Mar 2018</td></tr></tbody></table></div>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 18 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Owner History & Plate Changes</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="8.5" r="3.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" fill="none" stroke="#fff" stroke-width="1.6"/></svg></div>
+  <div>
+    <h2>Owner History</h2>
+    <p class="sec-sub">Previous keepers and ownership records</p>
+  </div>
+</div>
+<div class="two-col"><div class="owner-card">
+  <h4>Owner #1</h4>
+  <table class="info-table cols-1"><tbody><tr><th>VRM</th><td>MF18OBG</td></tr><tr><th>Keeper Start Date</th><td>22 Nov 2022</td></tr><tr><th>Disposal Date</th><td>07 Nov 2022</td></tr><tr><th>Previous Keepers</th><td>2</td></tr></tbody></table>
+</div><div class="owner-card">
+  <h4>Owner #2</h4>
+  <table class="info-table cols-1"><tbody><tr><th>VRM</th><td>MF18OBG</td></tr><tr><th>Keeper Start Date</th><td>18 Mar 2018</td></tr><tr><th>Disposal Date</th><td>18 Mar 2018</td></tr><tr><th>Previous Keepers</th><td>1</td></tr></tbody></table>
+</div></div>
+<div style="margin-top:6mm;">
+  <div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="8" width="18" height="8" rx="1.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M7 12h1M17 12h1" stroke="#fff" stroke-width="1.6"/></svg></div>
+  <div>
+    <h2>Plate Changes</h2>
+    <p class="sec-sub">Registration plate history and changes</p>
+  </div>
+</div>
+  <div class="card" style="text-align:center;color:#7a869c;font-size:11px;">No plate records found for MF18OBG.</div>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 19 of 20</span>
+</div>
+</section><section class="page ">
+  <div class="pg-header">
+  <div class="pg-brand">
+    <svg viewBox="0 0 48 56" width="30" height="30">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+    <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
+  </div>
+  <div class="pg-section-label">Glossary & Disclaimer</div>
+  <div class="pg-reg">MF18OBG</div>
+</div>
+  <div class="pg-body">
+    
+<div class="sec-title-row">
+  <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M12 11v5M12 8v.01" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+  <div>
+    <h2>Glossary & Disclaimer</h2>
+    <p class="sec-sub">How to interpret this report and its limitations</p>
+  </div>
+</div>
+<div class="card">
+  <p class="card-title">Glossary</p>
+  <table class="info-table cols-1"><tbody><tr><th>MOT</th><td>Annual UK roadworthiness test administered by the DVSA</td></tr><tr><th>Category A/B/S/N</th><td>Insurance write-off severity classes, from scrap-only to repairable</td></tr><tr><th>VRM</th><td>Vehicle Registration Mark &mdash; the number plate</td></tr><tr><th>HP / PCP</th><td>Hire Purchase / Personal Contract Purchase finance agreements</td></tr></tbody></table>
+</div>
+<div class="disclaimer">
+  This report is compiled from DVLA, DVSA and third-party commercial data sources believed to be reliable at the
+  time of generation. AuthorizeCheck aggregates and presents this information for guidance only; it does not
+  constitute a guarantee of a vehicle's condition, history or legal status, and buyers are encouraged to arrange
+  an independent physical inspection before purchase. Report reference VI-MF18OBG-01, generated 01 May 2026.
+</div>
+<div style="margin-top:10mm; text-align:center;">
+  <svg viewBox="0 0 48 56" width="36" height="36">
+  <path d="M24 2 L44 10 V26 C44 40 35 50 24 54 C13 50 4 40 4 26 V10 Z" fill="#2563eb"/>
+  <path d="M15 27 L21 33 L34 19" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+  <div style="font-weight:800; font-size:14px; margin-top:6px;">Authorize<span style="color:#2563eb;">Check</span></div>
+  <div style="font-size:10px;color:#9aa5b8; margin-top:2px;">authorizecheck.co.uk &middot; UK Vehicle Intelligence</div>
+</div>
+
+  </div>
+  <div class="pg-footer">
+  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
+  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Page 20 of 20</span>
+</div>
+</section>
+</body>
+</html>

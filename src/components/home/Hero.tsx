@@ -20,7 +20,7 @@ export function Hero() {
       );
       return;
     }
-    router.push("/checkout");
+    router.push(`/checkout?vrm=${encodeURIComponent(value)}`);
   }
 
   return (
