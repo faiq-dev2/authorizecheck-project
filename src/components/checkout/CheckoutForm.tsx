@@ -11,14 +11,14 @@ const PLANS = [
     label: "Basic Check — £49.99",
     name: "Basic Check",
     price: "£49.99",
-    paymentUrl: "https://pay.sumup.com/b2c/Q391KWPF",
+    paymentUrl: "https://buy.stripe.com/bJe9ASant8WmexggdJgw001",
   },
   {
     id: "full",
     label: "Full Comprehensive — £54.99",
     name: "Full Comprehensive",
     price: "£54.99",
-    paymentUrl: "https://pay.sumup.com/b2c/QM0IAQ2Z",
+    paymentUrl: "https://buy.stripe.com/4gMbJ09jpb4u3SC2mTgw000",
   },
 ] as const;
 
