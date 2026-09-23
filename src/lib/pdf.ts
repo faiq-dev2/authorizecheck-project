@@ -185,7 +185,37 @@ export async function generatePdfReport(data: VehicleReportData): Promise<Buffer
     });
   } else {
     // Vercel Serverless / AWS Lambda Linux environment
-    const executablePath = await chromium.executablePath();
+    chromium.setGraphicsMode = false;
+    let executablePath: string;
+
+    const localCandidates = [
+      path.join(process.cwd(), "node_modules", "@sparticuz", "chromium", "bin"),
+      path.join(process.cwd(), "..", "node_modules", "@sparticuz", "chromium", "bin"),
+      "/var/task/node_modules/@sparticuz/chromium/bin",
+    ];
+    const existingBinDir = localCandidates.find((dir) => fs.existsSync(dir));
+
+    try {
+      if (existingBinDir) {
+        console.log(`[PDF] Found local chromium bin directory at: ${existingBinDir}`);
+        executablePath = await chromium.executablePath(existingBinDir);
+      } else {
+        const arch = process.arch === "arm64" ? "arm64" : "x64";
+        const packUrl =
+          process.env.CHROMIUM_PACK_URL ||
+          `https://github.com/Sparticuz/chromium/releases/download/v153.0.0/chromium-v153.0.0-pack.${arch}.tar`;
+        console.log(`[PDF] Local chromium bin not found. Falling back to remote pack: ${packUrl}`);
+        executablePath = await chromium.executablePath(packUrl);
+      }
+    } catch (launchErr) {
+      console.warn("[PDF] Primary executablePath resolution failed, attempting remote pack fallback...", launchErr);
+      const arch = process.arch === "arm64" ? "arm64" : "x64";
+      const packUrl =
+        process.env.CHROMIUM_PACK_URL ||
+        `https://github.com/Sparticuz/chromium/releases/download/v153.0.0/chromium-v153.0.0-pack.${arch}.tar`;
+      executablePath = await chromium.executablePath(packUrl);
+    }
+
     browser = await puppeteer.launch({
       executablePath,
       headless: true,

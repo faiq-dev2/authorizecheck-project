@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
+  outputFileTracingIncludes: {
+    "/api/admin/generate-report": ["./node_modules/@sparticuz/chromium/bin/**/*"],
+    "/api/generate-report": ["./node_modules/@sparticuz/chromium/bin/**/*"],
+  },
 };
 
 export default nextConfig;
