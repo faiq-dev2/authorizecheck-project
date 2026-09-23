@@ -1,5 +1,6 @@
 import http from "http";
 import https from "https";
+import zlib from "zlib";
 import { z } from "zod";
 import { VehicleReportData, MotHistoryItem, MileageRecord, OwnerRecord } from "./types";
 
@@ -452,11 +453,27 @@ export function mapVehicleData(apiResponse: any, requestedVrm: string): VehicleR
   return parsed.data;
 }
 
+function normalizeEndpoint(rawEndpoint?: string): string {
+  let endpoint = rawEndpoint?.trim() || "https://uk.api.vehicledataglobal.com/r2/lookup";
+  if (endpoint.includes("ukvehicledata.co.uk")) {
+    endpoint = endpoint.replace(/https?:\/\/[^/]+/i, "https://uk.api.vehicledataglobal.com");
+  }
+  endpoint = endpoint.replace(/\/+$/, "");
+  if (!endpoint.includes("/r2/lookup")) {
+    if (endpoint.endsWith("/r2")) {
+      endpoint = `${endpoint}/lookup`;
+    } else {
+      endpoint = `${endpoint}/r2/lookup`;
+    }
+  }
+  return endpoint;
+}
+
 function fetchJsonWithHttps(
   urlString: string,
   headers: Record<string, string>,
   timeoutMs = 15000
-): Promise<{ statusCode: number; body: string }> {
+): Promise<{ statusCode: number; contentType: string; body: string }> {
   return new Promise((resolve, reject) => {
     const parsed = new URL(urlString);
     const lib = parsed.protocol === "http:" ? http : https;
@@ -469,11 +486,32 @@ function fetchJsonWithHttps(
         timeout: timeoutMs,
       },
       (res) => {
-        let body = "";
-        res.setEncoding("utf8");
-        res.on("data", (chunk) => (body += chunk));
+        const chunks: Buffer[] = [];
+        res.on("data", (chunk) => chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)));
         res.on("end", () => {
-          resolve({ statusCode: res.statusCode || 0, body });
+          try {
+            const buffer = Buffer.concat(chunks);
+            const encoding = (res.headers["content-encoding"] || "").toLowerCase();
+            let body: string;
+
+            if (encoding === "gzip") {
+              body = zlib.gunzipSync(buffer).toString("utf8");
+            } else if (encoding === "deflate") {
+              body = zlib.inflateSync(buffer).toString("utf8");
+            } else if (encoding === "br") {
+              body = zlib.brotliDecompressSync(buffer).toString("utf8");
+            } else {
+              body = buffer.toString("utf8");
+            }
+
+            resolve({
+              statusCode: res.statusCode || 0,
+              contentType: (res.headers["content-type"] || "").toLowerCase(),
+              body,
+            });
+          } catch (decodeErr) {
+            reject(decodeErr);
+          }
         });
       }
     );
@@ -501,15 +539,15 @@ export async function fetchVehicleData(vrm: string): Promise<VehicleReportData> 
     throw new Error("Vehicle data service is not configured on the server (VDG_API_KEY is missing).");
   }
 
-  const endpoint = process.env.VDG_API_BASE_URL || "https://uk.api.vehicledataglobal.com/r2/lookup";
-  const packageName = process.env.VDG_DATA_PACKAGE || "VehicleDetails";
+  const endpoint = normalizeEndpoint(process.env.VDG_API_BASE_URL);
+  const packageName = (process.env.VDG_DATA_PACKAGE || "VehicleDetails").trim();
 
   const url = new URL(endpoint);
   url.searchParams.set("packageName", packageName);
   url.searchParams.set("vrm", vrmFormatted);
 
   try {
-    const { statusCode, body: responseBody } = await fetchJsonWithHttps(
+    const { statusCode, contentType, body: responseBody } = await fetchJsonWithHttps(
       url.toString(),
       {
         Accept: "application/json",
@@ -519,14 +557,18 @@ export async function fetchVehicleData(vrm: string): Promise<VehicleReportData> 
       15000
     );
 
-    console.log(`[VDG API] HTTP ${statusCode} response for ${vrmFormatted}`);
+    console.log(`[VDG API] HTTP ${statusCode} response for ${vrmFormatted} (endpoint: ${url.origin}${url.pathname})`);
 
     if (statusCode >= 200 && statusCode < 300) {
       let data: unknown;
       try {
         data = JSON.parse(responseBody);
       } catch {
-        throw new Error("Vehicle data service returned an invalid JSON response.");
+        const snippet = responseBody.slice(0, 120).replace(/\s+/g, " ");
+        console.error(`[VDG API] Non-JSON response received (HTTP ${statusCode}, type: ${contentType}): "${snippet}"`);
+        throw new Error(
+          `Vehicle data service returned an invalid JSON response (HTTP ${statusCode}${contentType ? `, ${contentType}` : ""}): "${snippet}"`
+        );
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
