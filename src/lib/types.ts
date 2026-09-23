@@ -111,6 +111,9 @@ export interface VehicleReportData {
   motHistorySpan: string;
   motTimeline: MotHistoryItem[];
 
+  taxBand: string;
+  taxAnnualAmount: string;
+
   financeStatus: string;
   financeActiveAgreements: string;
   financeHistoricAgreements: string;

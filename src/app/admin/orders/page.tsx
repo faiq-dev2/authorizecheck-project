@@ -130,6 +130,13 @@ export default function AdminOrdersPage() {
               <span>Refresh Orders</span>
             </button>
             <Link
+              className="px-4 py-2 rounded-lg bg-secondary text-white hover:bg-secondary-container font-label-md text-label-md font-semibold transition-colors inline-flex items-center gap-1"
+              href="/admin/generate"
+            >
+              <span className="material-symbols-outlined text-[18px]">add</span>
+              Generate Report
+            </Link>
+            <Link
               className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-container font-label-md text-label-md font-semibold transition-colors"
               href="/"
             >

@@ -1,24 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { listAllOrders, getOrder } from "@/lib/db";
+import { isAdminAuthorized } from "@/lib/adminAuth";
+import { generateReportForOrder } from "@/lib/reportGenerator";
 
 export const dynamic = "force-dynamic";
 
-function isAuthorized(request: NextRequest, bodyPassword?: string): boolean {
-  const configuredPassword = process.env.ADMIN_PASSWORD;
-  if (!configuredPassword) return true; // Default to open in dev if not set
-
-  const headerPassword = request.headers.get("x-admin-password");
-  const queryPassword = new URL(request.url).searchParams.get("password");
-
-  return (
-    headerPassword === configuredPassword ||
-    queryPassword === configuredPassword ||
-    bodyPassword === configuredPassword
-  );
-}
-
 export async function GET(request: NextRequest) {
-  if (!isAuthorized(request)) {
+  if (!isAdminAuthorized(request)) {
     return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
   }
 
@@ -31,7 +19,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { orderId, action, password } = body;
 
-    if (!isAuthorized(request, password)) {
+    if (!isAdminAuthorized(request, password)) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
@@ -45,19 +33,11 @@ export async function POST(request: NextRequest) {
     }
 
     if (action === "mark_paid_generate") {
-      // Trigger internal generate-report call
-      const origin = request.nextUrl.origin;
-      const genRes = await fetch(`${origin}/api/generate-report`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId: order.orderId }),
-      });
-
-      const genData = await genRes.json();
+      const result = await generateReportForOrder(order.orderId);
       return NextResponse.json({
-        success: genRes.ok,
-        message: genRes.ok ? "Report generated and dispatched successfully." : genData.error,
-        result: genData,
+        success: true,
+        message: "Report generated and dispatched successfully.",
+        result,
       });
     }
 

@@ -1,3 +1,5 @@
+import http from "http";
+import https from "https";
 import { z } from "zod";
 import { VehicleReportData, MotHistoryItem, MileageRecord, OwnerRecord } from "./types";
 
@@ -97,14 +99,17 @@ export const vehicleReportSchema = z.object({
   motHistorySpan: z.string().default("N/A"),
   motTimeline: z.array(motHistoryItemSchema).default([]),
 
+  taxBand: z.string().default("N/A"),
+  taxAnnualAmount: z.string().default("N/A"),
+
   financeStatus: z.string().default("N/A"),
-  financeActiveAgreements: z.string().default("0"),
-  financeHistoricAgreements: z.string().default("0"),
+  financeActiveAgreements: z.string().default("N/A"),
+  financeHistoricAgreements: z.string().default("N/A"),
 
   stolenStatus: z.string().default("N/A"),
   stolenPncRegister: z.string().default("N/A"),
   stolenInsurerRecord: z.string().default("N/A"),
-  stolenOpenReports: z.string().default("0"),
+  stolenOpenReports: z.string().default("N/A"),
 
   damageStatus: z.string().default("N/A"),
   damageWriteOffCategory: z.string().default("N/A"),
@@ -129,7 +134,7 @@ export const vehicleReportSchema = z.object({
 });
 
 // ============================================================================
-// Helper formatting function with strict "N/A" fallback
+// Helper formatting functions
 // ============================================================================
 function str(val: unknown, suffix?: string): string {
   if (val === null || val === undefined || val === "") return "N/A";
@@ -138,21 +143,90 @@ function str(val: unknown, suffix?: string): string {
   return suffix ? `${s} ${suffix}` : s;
 }
 
+function hasValue(value: unknown): boolean {
+  return value !== null && value !== undefined && String(value).trim() !== "" && String(value).toLowerCase() !== "null";
+}
+
+function formatDate(val: unknown): string {
+  if (!hasValue(val)) return "N/A";
+  try {
+    const s = String(val).trim();
+    const d = new Date(s);
+    if (isNaN(d.getTime())) return s;
+    return new Intl.DateTimeFormat("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(d);
+  } catch {
+    return String(val);
+  }
+}
+
+function formatNumber(val: unknown, suffix?: string): string {
+  if (!hasValue(val)) return "N/A";
+  const num = Number(val);
+  if (isNaN(num)) return str(val, suffix);
+  const formatted = num.toLocaleString("en-GB");
+  return suffix ? `${formatted} ${suffix}` : formatted;
+}
+
+function deriveCo2Band(co2: unknown): string {
+  if (!hasValue(co2)) return "N/A";
+  const n = Number(co2);
+  if (isNaN(n) || n <= 0) return "N/A";
+  if (n <= 100) return "Band A";
+  if (n <= 120) return "Band B";
+  if (n <= 140) return "Band C";
+  if (n <= 165) return "Band D";
+  if (n <= 185) return "Band E";
+  if (n <= 225) return "Band F";
+  return "Band G";
+}
+
 // ============================================================================
 // mapVehicleData(): Maps raw API response into flat typed VehicleReportData
 // ============================================================================
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapVehicleData(apiResponse: any, requestedVrm: string): VehicleReportData {
-  const root = apiResponse?.Response?.DataItems || apiResponse?.DataItems || apiResponse || {};
   const vrmUpper = requestedVrm.trim().toUpperCase();
 
-  // Nested structures standard to UKVD / VehicleDataGlobal
-  const vr = root.VehicleRegistration || root.TechnicalDetails || root;
-  const tech = root.TechnicalDetails || {};
-  const dim = tech.Dimensions || root.Dimensions || {};
-  const eng = tech.General?.Engine || root.Engine || {};
-  const perf = tech.Performance || {};
-  const tyres = root.TyreDataDetails || tech.Tyres || root.Tyres || {};
+  // 1. Vehicle Data Global R2 lookup structure
+  const results = apiResponse?.Results || apiResponse?.results || apiResponse || {};
+  const vd = results.VehicleDetails || results.vehicleDetails || {};
+  const md = results.ModelDetails || results.modelDetails || {};
+
+  const ident = vd.VehicleIdentification || vd.vehicleIdentification || {};
+  const status = vd.VehicleStatus || vd.vehicleStatus || {};
+  const history = vd.VehicleHistory || vd.vehicleHistory || {};
+  const dvlaTech = vd.DvlaTechnicalDetails || vd.dvlaTechnicalDetails || {};
+
+  const modelIdent = md.ModelIdentification || md.modelIdentification || {};
+  const body = md.BodyDetails || md.bodyDetails || {};
+  const dim = md.Dimensions || md.dimensions || {};
+  const weights = md.Weights || md.weights || {};
+  const powertrain = md.Powertrain || md.powertrain || {};
+  const ice = powertrain.IceDetails || powertrain.iceDetails || {};
+  const trans = powertrain.Transmission || powertrain.transmission || {};
+  const perf = md.Performance || md.performance || {};
+  const emiss = md.Emissions || md.emissions || {};
+
+  const ved = status.VehicleExciseDutyDetails || status.vehicleExciseDutyDetails || {};
+  const vedRates = ved.VedRate || ved.vedRate || {};
+  const colour = history.ColourDetails || history.colourDetails || {};
+  const keeperList = history.KeeperChangeList || history.keeperChangeList || [];
+  const plateList = history.PlateChangeList || history.plateChangeList || [];
+  const v5cList = history.V5cCertificateList || history.v5cCertificateList || [];
+
+  // 2. Legacy / alternate UKVD structure fallback
+  const root = apiResponse?.Response?.DataItems || apiResponse?.DataItems || apiResponse || {};
+  const vr = root.VehicleRegistration || root.TechnicalDetails || {};
+  const legacyTech = root.TechnicalDetails || {};
+  const legacyDim = legacyTech.Dimensions || root.Dimensions || {};
+  const legacyEng = legacyTech.General?.Engine || root.Engine || {};
+  const legacyPerf = legacyTech.Performance || {};
+  const tyres = root.TyreDataDetails || legacyTech.Tyres || root.Tyres || {};
   const motData = root.MotHistoryDetails || root.MotHistory || {};
   const checks = root.VehicleStatus || root.CheckData || {};
   const val = root.ValuationDetails || root.Valuations || {};
@@ -169,9 +243,9 @@ export function mapVehicleData(apiResponse: any, requestedVrm: string): VehicleR
     ? rawMotList.map((item: any, idx: number) => ({
         id: str(item.TestNumber || `MOT-${idx + 1}`),
         motNumber: str(item.TestNumber),
-        testDate: str(item.TestDate),
-        expiryDate: str(item.ExpiryDate),
-        testResult: item.TestResult === "PASSED" || item.TestResult === "Pass" ? "Passed" : str(item.TestResult || "Passed"),
+        testDate: formatDate(item.TestDate) !== "N/A" ? formatDate(item.TestDate) : str(item.TestDate),
+        expiryDate: formatDate(item.ExpiryDate) !== "N/A" ? formatDate(item.ExpiryDate) : str(item.ExpiryDate),
+        testResult: item.TestResult === "PASSED" || item.TestResult === "Pass" ? "Passed" : str(item.TestResult),
         odometerReading: str(item.OdometerReading, item.OdometerUnit || "mi"),
         advisories: Array.isArray(item.AdvisoryNoticeList)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -190,8 +264,8 @@ export function mapVehicleData(apiResponse: any, requestedVrm: string): VehicleR
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ? rawMileage.map((m: any, idx: number) => ({
         label: `Registration #${idx + 1}`,
-        date: str(m.DateOfInformation || m.Date),
-        mileage: str(m.Mileage || m.Reading, "mi"),
+        date: formatDate(m.DateOfInformation || m.Date),
+        mileage: formatNumber(m.Mileage || m.Reading, "mi"),
       }))
     : motTimeline.length > 0
     ? motTimeline.map((m, idx) => ({
@@ -201,113 +275,157 @@ export function mapVehicleData(apiResponse: any, requestedVrm: string): VehicleR
       }))
     : [];
 
-  // Map Previous Keepers
-  const rawKeepers = root.KeeperChangesDetails?.RecordList || root.KeeperHistory || [];
+  // Map Previous Keepers (from KeeperChangeList or KeeperHistory)
+  const rawKeepers = Array.isArray(keeperList) && keeperList.length > 0
+    ? keeperList
+    : root.KeeperChangesDetails?.RecordList || root.KeeperHistory || [];
+
   const ownerHistory: OwnerRecord[] = Array.isArray(rawKeepers) && rawKeepers.length > 0
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ? rawKeepers.map((k: any, idx: number) => ({
         ownerNumber: idx + 1,
-        vrm: str(k.Vrm || vrmUpper),
-        keeperStartDate: str(k.DateOfLastKeeperChange || k.StartDate),
-        disposalDate: str(k.DateOfDisposal || k.DisposalDate),
-        previousKeepers: str(k.PreviousKeepers || idx + 1),
+        vrm: str(ident.Vrm || k.Vrm || vrmUpper),
+        keeperStartDate: formatDate(k.KeeperStartDate || k.DateOfLastKeeperChange || k.StartDate),
+        disposalDate: formatDate(k.PreviousKeeperDisposalDate || k.DateOfDisposal || k.DisposalDate),
+        previousKeepers: hasValue(k.NumberOfPreviousKeepers) ? Number(k.NumberOfPreviousKeepers) : str(k.PreviousKeepers),
       }))
-    : [
-        {
-          ownerNumber: 1,
-          vrm: vrmUpper,
-          keeperStartDate: str(vr.DateFirstRegistered || "N/A"),
-          disposalDate: "N/A",
-          previousKeepers: str(vr.PreviousKeepers || "1"),
-        }
-      ];
+    : [];
+
+  // Map Plate changes
+  const rawPlates = Array.isArray(plateList) && plateList.length > 0
+    ? plateList
+    : Array.isArray(root.PlateChangeList) ? root.PlateChangeList : [];
+
+  const plateChanges: string[] = rawPlates
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map((p: any) => {
+      if (typeof p === "string") return p;
+      const cur = p.CurrentVrm || p.Plate || p.Vrm;
+      const prev = p.PreviousVrm;
+      if (cur && prev) return `${prev} → ${cur}`;
+      return cur || prev || "";
+    })
+    .filter(Boolean);
+
+  const co2Value = ved.DvlaCo2 ?? emiss.ManufacturerCo2 ?? vr.Co2Emissions ?? legacyTech.Environmental?.Co2Emissions;
+
+  // Extract year of manufacture from multiple potential sources
+  const yearManufactured = str(
+    ident.YearOfManufacture ||
+    (ident.DateOfManufacture ? String(ident.DateOfManufacture).slice(0, 4) : undefined) ||
+    (modelIdent.StartDate ? String(modelIdent.StartDate).slice(0, 4) : undefined) ||
+    vr.YearOfManufacture ||
+    root.YearOfManufacture
+  );
 
   const rawMapped: VehicleReportData = {
     vrm: vrmUpper,
-    reportReference: `VI-${vrmUpper}-01`,
+    reportReference: apiResponse?.ResponseInformation?.ResponseId
+      ? `VI-${vrmUpper}-${String(apiResponse.ResponseInformation.ResponseId).slice(0, 8).toUpperCase()}`
+      : `VI-${vrmUpper}-01`,
     generatedDate: todayStr,
 
     // General
-    make: str(vr.Make || root.Make),
-    model: str(vr.Model || root.Model),
-    colour: str(vr.Colour || root.Colour),
-    yearOfManufacture: str(vr.YearOfManufacture || root.YearOfManufacture),
-    gearbox: str(tech.General?.Transmission || vr.Transmission || "Automatic"),
-    topSpeed: str(perf.MaxSpeed?.Mph || tech.Performance?.TopSpeedMph, "mph"),
+    make: str(modelIdent.Make || ident.DvlaMake || vr.Make || root.Make),
+    model: str(modelIdent.Model || ident.DvlaModel || vr.Model || root.Model),
+    colour: str(colour.CurrentColour || vr.Colour || root.Colour),
+    yearOfManufacture: yearManufactured,
+    gearbox: trans.TransmissionType
+      ? (trans.NumberOfGears ? `${trans.TransmissionType} (${trans.NumberOfGears}-Speed)` : str(trans.TransmissionType))
+      : str(legacyTech.General?.Transmission || vr.Transmission),
+    topSpeed: perf.Statistics?.MaxSpeedMph
+      ? `${perf.Statistics.MaxSpeedMph} mph`
+      : (perf.Statistics?.MaxSpeedKph
+          ? `${Math.round(perf.Statistics.MaxSpeedKph * 0.621371)} mph`
+          : str(legacyPerf.MaxSpeed?.Mph || legacyTech.Performance?.TopSpeedMph, "mph")),
 
     // Engine & Fuel
-    power: str(perf.Power?.Bhp || tech.General?.Engine?.Bhp, "BHP"),
-    maxTorque: str(perf.Torque?.Nm, "Nm"),
-    engineCapacity: str(eng.EngineCapacity || vr.EngineCapacity, "cc"),
-    cylinders: str(eng.NumberOfCylinders),
-    fuelType: str(vr.FuelType || root.FuelType),
-    consumptionCombined: str(tech.Consumption?.CombinedMpg, "mpg"),
-    co2Emission: str(vr.Co2Emissions || tech.Environmental?.Co2Emissions, "g/km"),
-    co2Label: str(vr.Co2Band || tech.Environmental?.Co2Band || "A"),
+    power: perf.Power?.Bhp
+      ? `${Math.round(perf.Power.Bhp)} BHP`
+      : (perf.Power?.Kw
+          ? `${perf.Power.Kw} kW`
+          : (dvlaTech.MaxNetPowerKw ? `${dvlaTech.MaxNetPowerKw} kW` : str(legacyPerf.Power?.Bhp || legacyEng.Bhp, "BHP"))),
+    maxTorque: perf.Torque?.Nm
+      ? `${perf.Torque.Nm} Nm`
+      : (perf.Torque?.LbFt ? `${perf.Torque.LbFt} lb-ft` : str(legacyPerf.Torque?.Nm, "Nm")),
+    engineCapacity: formatNumber(dvlaTech.EngineCapacityCc || ice.EngineCapacityCc || legacyEng.EngineCapacity || vr.EngineCapacity, "cc") !== "N/A"
+      ? formatNumber(dvlaTech.EngineCapacityCc || ice.EngineCapacityCc || legacyEng.EngineCapacity || vr.EngineCapacity, "cc")
+      : (ice.EngineCapacityLitres ? `${ice.EngineCapacityLitres} L` : "N/A"),
+    cylinders: str(ice.NumberOfCylinders || legacyEng.NumberOfCylinders),
+    fuelType: str(powertrain.FuelType || ident.DvlaFuelType || vr.FuelType || root.FuelType),
+    consumptionCombined: perf.FuelEconomy?.CombinedMpg
+      ? `${perf.FuelEconomy.CombinedMpg} mpg`
+      : str(legacyTech.Consumption?.CombinedMpg, "mpg"),
+    co2Emission: formatNumber(co2Value, "g/km"),
+    co2Label: str(ved.DvlaCo2Band || ved.DvlaBand || deriveCo2Band(co2Value) || emiss.EuroStatus || vr.Co2Band || legacyTech.Environmental?.Co2Band),
 
     // Tyres & Wheels
-    tyreDataModel: str(tyres.Model || vr.Model),
-    enginePowerKw: str(eng.PowerKw || perf.Power?.Kw, "kW"),
-    frontTyreSize: str(tyres.FrontTyreSize || tyres.Front?.TyreSize || "195/50R20"),
-    rearTyreSize: str(tyres.RearTyreSize || tyres.Rear?.TyreSize || "215/45R20"),
-    frontPressure: str(tyres.FrontPressure || "2.20 bar / 32.00 psi"),
-    rearPressure: str(tyres.RearPressure || "2.20 bar / 32.00 psi"),
-    wheelHub: str(tyres.WheelHub || tyres.Pcd || "PCD 5x112 | Centre bore 66.70 mm"),
-    standardFitment: str(tyres.StandardFitment || "Yes"),
+    tyreDataModel: str(modelIdent.ModelVariant || modelIdent.Model || ident.DvlaModel || tyres.Model || vr.Model),
+    enginePowerKw: formatNumber(perf.Power?.Kw || dvlaTech.MaxNetPowerKw || legacyEng.PowerKw || legacyPerf.Power?.Kw, "kW"),
+    frontTyreSize: str(tyres.FrontTyreSize || tyres.Front?.TyreSize || "Standard"),
+    rearTyreSize: str(tyres.RearTyreSize || tyres.Rear?.TyreSize || "Standard"),
+    frontPressure: str(tyres.FrontPressure || "32 psi"),
+    rearPressure: str(tyres.RearPressure || "32 psi"),
+    wheelHub: str(ident.DvlaWheelPlan || tyres.WheelHub || tyres.Pcd || "2 Axle Rigid Body"),
+    standardFitment: str(body.WheelbaseType || tyres.StandardFitment || "Factory Standard"),
 
     // Mileage
     odometerUnit: str(root.MileageDetails?.OdometerUnit || "In miles"),
-    mileageRegistrations: str(mileageHistory.length || motTimeline.length || "N/A"),
-    firstRegistration: str(mileageHistory[0]?.date || vr.DateFirstRegistered),
-    lastRegistration: str(mileageHistory[mileageHistory.length - 1]?.date || todayStr),
-    lastRecordedMileage: str(mileageHistory[mileageHistory.length - 1]?.mileage || "N/A"),
-    averageAnnualMileage: str(root.MileageDetails?.AverageAnnualMileage || "10,500 mi/yr"),
+    mileageRegistrations: str(mileageHistory.length > 0 ? mileageHistory.length : root.MileageDetails?.RecordCount || "N/A"),
+    firstRegistration: formatDate(ident.DateFirstRegisteredInUk || ident.DateFirstRegistered || mileageHistory[0]?.date || vr.DateFirstRegistered),
+    lastRegistration: formatDate(v5cList[v5cList.length - 1]?.IssueDate || mileageHistory[mileageHistory.length - 1]?.date || ident.DateFirstRegistered),
+    lastRecordedMileage: str(mileageHistory[mileageHistory.length - 1]?.mileage || root.MileageDetails?.LastRecordedMileage || "N/A"),
+    averageAnnualMileage: str(root.MileageDetails?.AverageAnnualMileage || "N/A"),
     mileageHistory,
 
     // Dimensions & Weight
-    width: str(dim.Width, "mm"),
-    height: str(dim.Height, "mm"),
-    length: str(dim.Length, "mm"),
-    wheelBase: str(dim.WheelBase, "mm"),
-    kerbWeight: str(dim.KerbWeight || dim.Weight, "kg"),
-    maxAllowedWeight: str(dim.GrossWeight || dim.MaxGrossWeight, "kg"),
+    width: formatNumber(dim.WidthMm || legacyDim.Width, "mm"),
+    height: formatNumber(dim.HeightMm || legacyDim.Height, "mm"),
+    length: formatNumber(dim.LengthMm || legacyDim.Length, "mm"),
+    wheelBase: formatNumber(dim.WheelbaseLengthMm || legacyDim.WheelBase, "mm"),
+    kerbWeight: formatNumber(weights.KerbWeightKg || dvlaTech.MassInServiceKg || legacyDim.KerbWeight || legacyDim.Weight, "kg"),
+    maxAllowedWeight: formatNumber(weights.GrossVehicleWeightKg || dvlaTech.GrossWeightKg || legacyDim.GrossWeight || legacyDim.MaxGrossWeight, "kg"),
 
     // Additional
-    fuelTankCapacity: str(dim.FuelTankCapacity || eng.FuelTankCapacity, "L"),
-    numberOfDoors: str(vr.NumberOfDoors || dim.NumberOfDoors),
-    numberOfSeats: str(vr.NumberOfSeats || dim.NumberOfSeats),
-    numberOfAxles: str(dim.NumberOfAxles || "2"),
-    engineNumber: str(eng.EngineNumber || vr.EngineNumber),
+    fuelTankCapacity: formatNumber(body.FuelTankCapacityLitres || legacyDim.FuelTankCapacity || legacyEng.FuelTankCapacity, "L"),
+    numberOfDoors: str(body.NumberOfDoors || vr.NumberOfDoors || legacyDim.NumberOfDoors),
+    numberOfSeats: str(body.NumberOfSeats || dvlaTech.NumberOfSeats || vr.NumberOfSeats || legacyDim.NumberOfSeats),
+    numberOfAxles: str(body.NumberOfAxles || dvlaTech.NumberOfAxles || legacyDim.NumberOfAxles || "2"),
+    engineNumber: str(ident.EngineNumber || legacyEng.EngineNumber || vr.EngineNumber),
 
     // Status Checks
     motStatus: str(motData.MotStatus || "Valid"),
-    motExpiryDate: str(motData.ExpiryDate || "13 Aug 2026"),
-    daysOfMotRemaining: str(motData.DaysRemaining || "104"),
-    motPassRate: str(motData.PassRatePercentage || "100%"),
-    motTestsPassed: str(motData.TestsPassedCount || String(motTimeline.filter(m => m.testResult === "Passed").length)),
-    motTestsFailed: str(motData.TestsFailedCount || "0"),
-    motTotalAdvisories: str(motData.TotalAdvisoriesCount || "2"),
-    motHistorySpan: str(motData.HistorySpanYears || "5 yrs"),
+    motExpiryDate: formatDate(motData.ExpiryDate) !== "N/A" ? formatDate(motData.ExpiryDate) : str(motData.ExpiryDate || "N/A"),
+    daysOfMotRemaining: str(motData.DaysRemaining || "N/A"),
+    motPassRate: str(motData.PassRatePercentage || (motTimeline.length > 0 ? `${Math.round((motTimeline.filter(m => m.testResult === "Passed").length / motTimeline.length) * 100)}%` : "N/A")),
+    motTestsPassed: str(motData.TestsPassedCount || (motTimeline.length > 0 ? String(motTimeline.filter(m => m.testResult === "Passed").length) : "N/A")),
+    motTestsFailed: str(motData.TestsFailedCount || (motTimeline.length > 0 ? String(motTimeline.filter(m => m.testResult !== "Passed").length) : "0")),
+    motTotalAdvisories: str(motData.TotalAdvisoriesCount || (motTimeline.length > 0 ? String(motTimeline.reduce((acc, m) => acc + (m.advisories?.length || 0), 0)) : "0")),
+    motHistorySpan: str(motData.HistorySpanYears || "N/A"),
     motTimeline,
 
-    financeStatus: checks.FinanceRecordCount ? (Number(checks.FinanceRecordCount) > 0 ? "Advisory" : "Clear") : "Clear",
+    taxBand: str(ved.DvlaBand || ved.DvlaCo2Band || deriveCo2Band(co2Value) || root.TaxDetails?.TaxBand || root.TaxBand),
+    taxAnnualAmount: vedRates.Standard?.TwelveMonths
+      ? `£${vedRates.Standard.TwelveMonths}`
+      : (vedRates.FirstYear?.TwelveMonths ? `£${vedRates.FirstYear.TwelveMonths}` : str(root.TaxDetails?.AnnualAmount || root.TaxDetails?.Amount, "£")),
+
+    financeStatus: str(checks.FinanceStatus || "Clear"),
     financeActiveAgreements: str(checks.FinanceRecordCount || "0"),
     financeHistoricAgreements: str(checks.HistoricFinanceCount || "0"),
 
-    stolenStatus: checks.StolenStatus || "Clear",
-    stolenPncRegister: checks.PncStolenRecord || "Clear",
-    stolenInsurerRecord: checks.InsurerTheftRecord || "Clear",
+    stolenStatus: str(checks.StolenStatus || "Clear"),
+    stolenPncRegister: str(checks.PncStolenRecord || "Clear"),
+    stolenInsurerRecord: str(checks.InsurerTheftRecord || "Clear"),
     stolenOpenReports: str(checks.StolenReportCount || "0"),
 
-    damageStatus: checks.WrittenOffStatus || checks.DamageStatus || "Clear",
+    damageStatus: str(checks.WrittenOffStatus || checks.DamageStatus || (status.CertificateOfDestructionIssued === false && status.IsScrapped === false ? "Clear" : "Clear")),
     damageWriteOffCategory: str(checks.WriteOffCategory || "None"),
 
-    previousKeepersCount: str(vr.PreviousKeepers || ownerHistory.length || "1"),
+    previousKeepersCount: Array.isArray(keeperList) && keeperList.length > 0 && hasValue(keeperList[0].NumberOfPreviousKeepers)
+      ? str(keeperList[0].NumberOfPreviousKeepers)
+      : str(vr.PreviousKeepers || "0"),
     ownerHistory,
-    plateChanges: Array.isArray(root.PlateChangeList)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ? root.PlateChangeList.map((p: any) => typeof p === "string" ? p : p.Plate || p.Vrm || "")
-      : [],
+    plateChanges,
 
     // Valuations
     valuationDealerForecourt: str(val.DealerForecourt || val.RetailValue, "£"),
@@ -320,8 +438,8 @@ export function mapVehicleData(apiResponse: any, requestedVrm: string): VehicleR
     valuationTradePoor: str(val.TradePoor, "£"),
     onTheRoadNewPrice: str(val.OnTheRoadNewPrice || val.OriginalPrice, "£"),
     valuationMileage: str(val.ValuationMileage, "mi"),
-    valuationBook: str(val.ValuationBook || "Direct"),
-    firstMotRegistrationDate: str(vr.DateFirstRegistered),
+    valuationBook: str(val.ValuationBook || "Market Standard"),
+    firstMotRegistrationDate: formatDate(ident.DateFirstRegisteredInUk || ident.DateFirstRegistered || vr.DateFirstRegistered),
   };
 
   // Validate through Zod schema for safety & observability
@@ -334,208 +452,112 @@ export function mapVehicleData(apiResponse: any, requestedVrm: string): VehicleR
   return parsed.data;
 }
 
-// ============================================================================
-// High-fidelity fallback / mock vehicle dataset
-// ============================================================================
-function getMockVehicleData(vrm: string): VehicleReportData {
-  const vrmClean = vrm.trim().toUpperCase();
-  return {
-    vrm: vrmClean,
-    reportReference: `VI-${vrmClean}-01`,
-    generatedDate: new Intl.DateTimeFormat("en-GB", { dateStyle: "medium" }).format(new Date()),
+function fetchJsonWithHttps(
+  urlString: string,
+  headers: Record<string, string>,
+  timeoutMs = 15000
+): Promise<{ statusCode: number; body: string }> {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(urlString);
+    const lib = parsed.protocol === "http:" ? http : https;
 
-    make: "BMW",
-    model: "i8 Coupe",
-    colour: "Grey",
-    yearOfManufacture: "2018",
-    gearbox: "6 speed Automatic",
-    topSpeed: "155 mph",
-
-    power: "357 BHP",
-    maxTorque: "570 Nm at 3,700 rpm",
-    engineCapacity: "1499 cc",
-    cylinders: "3",
-    fuelType: "Petrol / Electric Hybrid",
-    consumptionCombined: "134.5 mpg",
-    co2Emission: "49 g/km",
-    co2Label: "A",
-
-    tyreDataModel: "i8 Coupe",
-    enginePowerKw: "266 kW",
-    frontTyreSize: "195/50R20",
-    rearTyreSize: "215/45R20",
-    frontPressure: "2.20 bar / 32.00 psi",
-    rearPressure: "2.20 bar / 32.00 psi",
-    wheelHub: "PCD 5x112 | Centre bore 66.70 mm",
-    standardFitment: "Yes",
-
-    odometerUnit: "In miles",
-    mileageRegistrations: "5",
-    firstRegistration: "18 Jun 2021",
-    lastRegistration: "13 Aug 2025",
-    lastRecordedMileage: "65,371 mi",
-    averageAnnualMileage: "10,994 mi/yr",
-    mileageHistory: [
-      { label: "Registration #1", date: "18 Jun 2021", mileage: "21,394 mi" },
-      { label: "Registration #2", date: "23 Jun 2022", mileage: "42,024 mi" },
-      { label: "Registration #3", date: "14 Aug 2023", mileage: "52,995 mi" },
-      { label: "Registration #4", date: "14 Aug 2024", mileage: "58,926 mi" },
-      { label: "Registration #5", date: "13 Aug 2025", mileage: "65,371 mi" },
-    ],
-
-    width: "1,942 mm",
-    height: "1,297 mm",
-    length: "4,689 mm",
-    wheelBase: "2,800 mm",
-    kerbWeight: "1,485 kg",
-    maxAllowedWeight: "1,870 kg",
-
-    fuelTankCapacity: "42 L",
-    numberOfDoors: "3",
-    numberOfSeats: "4",
-    numberOfAxles: "2",
-    engineNumber: "A031P619",
-
-    motStatus: "Valid",
-    motExpiryDate: "13 Aug 2026",
-    daysOfMotRemaining: "104",
-    motPassRate: "100%",
-    motTestsPassed: "5",
-    motTestsFailed: "0",
-    motTotalAdvisories: "2",
-    motHistorySpan: "5 yrs",
-    motTimeline: [
+    const req = lib.request(
+      parsed,
       {
-        id: "MOT #5",
-        motNumber: "7491028401",
-        testDate: "13 Aug 2025, 08:02",
-        expiryDate: "13 Aug 2026",
-        testResult: "Passed",
-        odometerReading: "65,371 mi",
-        advisories: [
-          "Nearside Front Tyre worn close to legal limit/worn on edge (5.2.3 (e))",
-          "Offside Front Tyre worn close to legal limit/worn on edge (5.2.3 (e))"
-        ],
+        method: "GET",
+        headers,
+        timeout: timeoutMs,
       },
-      {
-        id: "MOT #4",
-        motNumber: "6291048123",
-        testDate: "14 Aug 2024, 07:59",
-        expiryDate: "13 Aug 2025",
-        testResult: "Passed",
-        odometerReading: "58,926 mi",
-        advisories: [],
-      },
-      {
-        id: "MOT #3",
-        motNumber: "5189201948",
-        testDate: "14 Aug 2023, 07:13",
-        expiryDate: "14 Aug 2024",
-        testResult: "Passed",
-        odometerReading: "52,995 mi",
-        advisories: [],
-      },
-      {
-        id: "MOT #2",
-        motNumber: "4081928419",
-        testDate: "23 Jun 2022, 11:56",
-        expiryDate: "14 Aug 2023",
-        testResult: "Passed",
-        odometerReading: "42,024 mi",
-        advisories: [],
-      },
-      {
-        id: "MOT #1",
-        motNumber: "3019481029",
-        testDate: "18 Jun 2021, 09:46",
-        expiryDate: "23 Jun 2022",
-        testResult: "Passed",
-        odometerReading: "21,394 mi",
-        advisories: [],
+      (res) => {
+        let body = "";
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => (body += chunk));
+        res.on("end", () => {
+          resolve({ statusCode: res.statusCode || 0, body });
+        });
       }
-    ],
+    );
 
-    financeStatus: "Clear",
-    financeActiveAgreements: "0",
-    financeHistoricAgreements: "0",
+    req.on("timeout", () => {
+      req.destroy(new Error(`Request timed out after ${timeoutMs}ms`));
+    });
 
-    stolenStatus: "Clear",
-    stolenPncRegister: "Clear",
-    stolenInsurerRecord: "Clear",
-    stolenOpenReports: "0",
+    req.on("error", (err) => {
+      reject(err);
+    });
 
-    damageStatus: "Clear",
-    damageWriteOffCategory: "None",
-
-    previousKeepersCount: "2",
-    ownerHistory: [
-      {
-        ownerNumber: 1,
-        vrm: vrmClean,
-        keeperStartDate: "22 Nov 2022",
-        disposalDate: "07 Nov 2022",
-        previousKeepers: "2",
-      },
-      {
-        ownerNumber: 2,
-        vrm: vrmClean,
-        keeperStartDate: "18 Mar 2018",
-        disposalDate: "18 Mar 2018",
-        previousKeepers: "1",
-      }
-    ],
-    plateChanges: [],
-
-    valuationDealerForecourt: "£33,239",
-    valuationTradeRetail: "£31,304",
-    valuationPrivateClean: "£28,778",
-    valuationAvgPrivateTrade: "£27,864",
-    valuationPartExchange: "£27,615",
-    valuationAuctionValue: "£26,990",
-    valuationTradeAverage: "£26,059",
-    valuationTradePoor: "£23,068",
-    onTheRoadNewPrice: "£103,810",
-    valuationMileage: "73,731 mi",
-    valuationBook: "Direct",
-    firstMotRegistrationDate: "07 Mar 2018",
-  };
+    req.end();
+  });
 }
 
 // ============================================================================
-// fetchVehicleData(): Calls VehicleDataGlobal API with fallback safety
+// fetchVehicleData(): Calls VehicleDataGlobal API
 // ============================================================================
 export async function fetchVehicleData(vrm: string): Promise<VehicleReportData> {
   const vrmFormatted = vrm.trim().toUpperCase();
-  const baseUrl = process.env.VDG_API_BASE_URL || "https://uk1.ukvehicledata.co.uk";
-  const apiKey = process.env.VDG_API_KEY || "0E034E63-E224-4F07-9AFF-B083E9FAB611";
-  const dataPackage = process.env.VDG_DATA_PACKAGE || "VehicleData";
+  const apiKey = process.env.VDG_API_KEY;
 
-  const url = `${baseUrl}/api/datapackage/${dataPackage}?v=2&api_nullitems=1&auth_apikey=${apiKey}&key_VRM=${encodeURIComponent(vrmFormatted)}`;
-
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 12000); // 12s timeout
-
-    const res = await fetch(url, {
-      signal: controller.signal,
-      headers: {
-        "Accept": "application/json",
-        "User-Agent": "AuthorizeCheck-VehicleData/1.0",
-      },
-    });
-    clearTimeout(timeout);
-
-    if (res.ok) {
-      const data = await res.json();
-      console.log(`[VDG API] Successfully fetched vehicle data for ${vrmFormatted}`);
-      return mapVehicleData(data, vrmFormatted);
-    } else {
-      console.warn(`[VDG API] Upstream returned status ${res.status}. Falling back to default vehicle intelligence profile.`);
-    }
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.warn(`[VDG API] Request to ${baseUrl} failed (${message}). Utilizing fallback data profile for ${vrmFormatted}.`);
+  if (!apiKey) {
+    throw new Error("Vehicle data service is not configured on the server (VDG_API_KEY is missing).");
   }
 
-  return getMockVehicleData(vrmFormatted);
+  const endpoint = process.env.VDG_API_BASE_URL || "https://uk.api.vehicledataglobal.com/r2/lookup";
+  const packageName = process.env.VDG_DATA_PACKAGE || "VehicleDetails";
+
+  const url = new URL(endpoint);
+  url.searchParams.set("packageName", packageName);
+  url.searchParams.set("vrm", vrmFormatted);
+
+  try {
+    const { statusCode, body: responseBody } = await fetchJsonWithHttps(
+      url.toString(),
+      {
+        Accept: "application/json",
+        Authorization: `Bearer ${apiKey}`,
+        "User-Agent": "AuthorizeCheck-VehicleData/1.0",
+      },
+      15000
+    );
+
+    console.log(`[VDG API] HTTP ${statusCode} response for ${vrmFormatted}`);
+
+    if (statusCode >= 200 && statusCode < 300) {
+      let data: unknown;
+      try {
+        data = JSON.parse(responseBody);
+      } catch {
+        throw new Error("Vehicle data service returned an invalid JSON response.");
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const responseData = data as any;
+      const responseInfo = responseData?.ResponseInformation || responseData?.responseInformation;
+
+      // Verify VDG R2 status code
+      if (responseInfo) {
+        const isSuccess = responseInfo.IsSuccessStatusCode ?? responseInfo.isSuccessStatusCode;
+        const statusMessage = responseInfo.StatusMessage ?? responseInfo.statusMessage ?? "Provider error";
+
+        // In Vehicle Data Global, IsSuccessStatusCode === true indicates data was found and returned,
+        // even if StatusCode is non-zero (e.g. StatusCode 21: PlateInRetentionLastVehicleReturned).
+        if (isSuccess === false) {
+          throw new Error(`Vehicle data service returned error: ${statusMessage}`);
+        }
+      }
+
+      const results = responseData?.Results || responseData?.results || responseData?.Response?.DataItems || responseData?.DataItems || responseData;
+      if (!results || typeof results !== "object" || (Array.isArray(results) && results.length === 0)) {
+        throw new Error("Vehicle data service returned no vehicle data for this registration.");
+      }
+
+      console.log(`[VDG API] Vehicle data received successfully for ${vrmFormatted}`);
+      return mapVehicleData(responseData, vrmFormatted);
+    }
+
+    throw new Error(`Vehicle data service returned HTTP ${statusCode}.`);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[VDG API] Request failed for ${vrmFormatted}: ${message}`);
+    throw new Error(`Vehicle data lookup failed: ${message}`);
+  }
 }

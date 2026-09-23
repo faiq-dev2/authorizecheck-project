@@ -22,102 +22,141 @@ export function renderReportHtml(data: VehicleReportData): string {
   const ref = escapeHtml(data.reportReference);
   const genDate = escapeHtml(data.generatedDate);
 
-  // 1. Replace Global Header / Footer VRM & Plate mentions
-  html = html.replace(/<div class="pg-reg">MF18OBG<\/div>/g, `<div class="pg-reg">${vrm}</div>`);
-  html = html.replace(/<span>Vehicle Intelligence Report &middot; MF18OBG<\/span>/g, `<span>Vehicle Intelligence Report &middot; ${vrm}</span>`);
-  html = html.replace(/<title>Vehicle Intelligence Report &mdash; MF18OBG<\/title>/g, `<title>Vehicle Intelligence Report &mdash; ${vrm}</title>`);
-  html = html.replace(/Generated 01 May 2026/g, `Generated ${genDate}`);
-  html = html.replace(/VI-MF18OBG-01/g, ref);
+  const tokens: Record<string, string> = {
+    VRM: vrm,
+    REPORT_REFERENCE: ref,
+    GENERATED_DATE: genDate,
+    FULL_NAME: fullName,
+    MAKE: escapeHtml(data.make),
+    MODEL: escapeHtml(data.model),
+    COLOUR: escapeHtml(data.colour),
+    YEAR: escapeHtml(data.yearOfManufacture),
+    GEARBOX: escapeHtml(data.gearbox),
+    TOP_SPEED: escapeHtml(data.topSpeed),
+    POWER: escapeHtml(data.power),
+    TORQUE: escapeHtml(data.maxTorque),
+    ENGINE_CAPACITY: escapeHtml(data.engineCapacity),
+    CYLINDERS: escapeHtml(data.cylinders),
+    FUEL_TYPE: escapeHtml(data.fuelType),
+    CONSUMPTION: escapeHtml(data.consumptionCombined),
+    CO2_EMISSION: escapeHtml(data.co2Emission),
+    CO2_LABEL: escapeHtml(data.co2Label),
+    TYRE_MODEL: escapeHtml(data.tyreDataModel),
+    ENGINE_POWER_KW: escapeHtml(data.enginePowerKw),
+    FRONT_TYRE: escapeHtml(data.frontTyreSize),
+    REAR_TYRE: escapeHtml(data.rearTyreSize),
+    FRONT_PRESSURE: escapeHtml(data.frontPressure),
+    REAR_PRESSURE: escapeHtml(data.rearPressure),
+    WHEEL_HUB: escapeHtml(data.wheelHub),
+    FITMENT: escapeHtml(data.standardFitment),
+    MOT_STATUS: escapeHtml(data.motStatus),
+    MOT_EXPIRY: escapeHtml(data.motExpiryDate),
+    MOT_DAYS: escapeHtml(data.daysOfMotRemaining),
+    MOT_PASS_RATE: escapeHtml(data.motPassRate),
+    MOT_PASSED: escapeHtml(data.motTestsPassed),
+    MOT_FAILED: escapeHtml(data.motTestsFailed),
+    MOT_ADVISORIES: escapeHtml(data.motTotalAdvisories),
+    MOT_HISTORY_SPAN: escapeHtml(data.motHistorySpan),
+    FINANCE_STATUS: escapeHtml(data.financeStatus),
+    FINANCE_ACTIVE: escapeHtml(data.financeActiveAgreements),
+    FINANCE_HISTORIC: escapeHtml(data.financeHistoricAgreements),
+    STOLEN_STATUS: escapeHtml(data.stolenStatus),
+    STOLEN_PNC: escapeHtml(data.stolenPncRegister),
+    STOLEN_INSURER: escapeHtml(data.stolenInsurerRecord),
+    STOLEN_REPORTS: escapeHtml(data.stolenOpenReports),
+    DAMAGE_STATUS: escapeHtml(data.damageStatus),
+    WRITE_OFF_CATEGORY: escapeHtml(data.damageWriteOffCategory),
+    KEEPERS: escapeHtml(data.previousKeepersCount),
+    PLATE_CHANGE_STATUS: data.plateChanges.length ? "Records found" : "Clear",
+    TAX_BAND: escapeHtml(data.taxBand),
+    TAX_AMOUNT: escapeHtml(data.taxAnnualAmount),
+    ODOMETER_UNIT: escapeHtml(data.odometerUnit),
+    MILEAGE_REGISTRATIONS: escapeHtml(data.mileageRegistrations),
+    FIRST_REGISTRATION: escapeHtml(data.firstRegistration),
+    LAST_REGISTRATION: escapeHtml(data.lastRegistration),
+    LAST_MILEAGE: escapeHtml(data.lastRecordedMileage),
+    AVERAGE_MILEAGE: escapeHtml(data.averageAnnualMileage),
+    WIDTH: escapeHtml(data.width),
+    HEIGHT: escapeHtml(data.height),
+    LENGTH: escapeHtml(data.length),
+    WHEEL_BASE: escapeHtml(data.wheelBase),
+    KERB_WEIGHT: escapeHtml(data.kerbWeight),
+    MAX_WEIGHT: escapeHtml(data.maxAllowedWeight),
+    FUEL_TANK: escapeHtml(data.fuelTankCapacity),
+    DOORS: escapeHtml(data.numberOfDoors),
+    SEATS: escapeHtml(data.numberOfSeats),
+    AXLES: escapeHtml(data.numberOfAxles),
+    ENGINE_NUMBER: escapeHtml(data.engineNumber),
+    DEALER_FORECOURT: escapeHtml(data.valuationDealerForecourt),
+    TRADE_RETAIL: escapeHtml(data.valuationTradeRetail),
+    PRIVATE_CLEAN: escapeHtml(data.valuationPrivateClean),
+    PRIVATE_TRADE: escapeHtml(data.valuationAvgPrivateTrade),
+    PART_EXCHANGE: escapeHtml(data.valuationPartExchange),
+    AUCTION_VALUE: escapeHtml(data.valuationAuctionValue),
+    TRADE_AVERAGE: escapeHtml(data.valuationTradeAverage),
+    TRADE_POOR: escapeHtml(data.valuationTradePoor),
+    NEW_PRICE: escapeHtml(data.onTheRoadNewPrice),
+    VALUATION_MILEAGE: escapeHtml(data.valuationMileage),
+    VALUATION_BOOK: escapeHtml(data.valuationBook),
+    FIRST_MOT_DATE: escapeHtml(data.firstMotRegistrationDate),
+  };
 
-  // 2. Cover Page Replacements
-  html = html.replace(
-    /<div class="cover-title">Everything on record for <span>BMW i8<\/span><\/div>/g,
-    `<div class="cover-title">Everything on record for <span>${fullName}</span></div>`
-  );
-  html = html.replace(
-    /<div class="cover-plate">MF18OBG<\/div>/g,
-    `<div class="cover-plate">${vrm}</div>`
-  );
-  html = html.replace(
-    /<div class="cover-vehicle-name">BMW i8 &middot; 2018 &middot; Grey<\/div>/g,
-    `<div class="cover-vehicle-name">${fullName} &middot; ${escapeHtml(data.yearOfManufacture)} &middot; ${escapeHtml(data.colour)}</div>`
-  );
-  html = html.replace(
-    /<div class="cover-vehicle-sub">Report generated 01 May 2026<\/div>/g,
-    `<div class="cover-vehicle-sub">Report generated ${genDate}</div>`
-  );
-  html = html.replace(
-    /<div class="cover-bottom-item">Registration<b>MF18OBG<\/b><\/div>/g,
-    `<div class="cover-bottom-item">Registration<b>${vrm}</b></div>`
-  );
+  for (const [token, value] of Object.entries(tokens)) {
+    html = html.replaceAll(`{{${token}}}`, value);
+  }
 
-  // 3. Executive Summary
-  html = html.replace(
-    /<p class="sec-sub">Headline results across every check we ran on MF18OBG<\/p>/g,
-    `<p class="sec-sub">Headline results across every check we ran on ${vrm}</p>`
-  );
-  html = html.replace(
-    /<div class="stat-tile-value">BMW i8<\/div>\s*<div class="stat-tile-label">Make & Model<\/div>/g,
-    `<div class="stat-tile-value">${fullName}</div><div class="stat-tile-label">Make & Model</div>`
-  );
-  html = html.replace(
-    /<div class="stat-tile-value">2018<\/div>\s*<div class="stat-tile-label">Year of Manufacture<\/div>/g,
-    `<div class="stat-tile-value">${escapeHtml(data.yearOfManufacture)}</div><div class="stat-tile-label">Year of Manufacture</div>`
-  );
-  html = html.replace(
-    /<div class="stat-tile-value">65,371 mi<\/div>\s*<div class="stat-tile-label">Last Recorded Mileage<\/div>/g,
-    `<div class="stat-tile-value">${escapeHtml(data.lastRecordedMileage)}</div><div class="stat-tile-label">Last Recorded Mileage</div>`
-  );
-  html = html.replace(
-    /<div class="stat-tile-value">2<\/div>\s*<div class="stat-tile-label">Previous Keepers<\/div>/g,
-    `<div class="stat-tile-value">${escapeHtml(data.previousKeepersCount)}</div><div class="stat-tile-label">Previous Keepers</div>`
-  );
+  const motTimelineHtml = data.motTimeline.length
+    ? data.motTimeline.map((item, index) => `<div class="mot-item"><div class="mot-item-head"><b>${escapeHtml(item.motNumber || item.id || `MOT #${index + 1}`)}</b><span class="mot-result-pass">${escapeHtml(item.testResult)}</span></div><div class="mot-date">Tested ${escapeHtml(item.testDate)} &middot; next expiry ${escapeHtml(item.expiryDate || "N/A")}</div>${(item.advisories || []).map((advisory) => `<div class="mot-advice"><b>Advisory</b>${escapeHtml(advisory)}</div>`).join("")}${(item.failures || []).map((failure) => `<div class="mot-advice"><b>Failure</b>${escapeHtml(failure)}</div>`).join("")}</div>`).join("")
+    : `<div class="card" style="text-align:center;color:#7a869c;font-size:11px;">No MOT records available.</div>`;
+  html = html.replace("{{MOT_TIMELINE}}", motTimelineHtml);
 
-  // 4. General Information Table
-  html = html.replace(
-    /<tr><th>Make<\/th><td>BMW<\/td><\/tr><tr><th>Model<\/th><td>i8<\/td><\/tr><tr><th>Colour<\/th><td>Grey<\/td><\/tr><tr><th>Year of Manufacture<\/th><td>2018<\/td><\/tr><tr><th>Gearbox<\/th><td>6 speed Automatic<\/td><\/tr><tr><th>Top Speed<\/th><td>155 mph<\/td><\/tr>/g,
-    `<tr><th>Make</th><td>${escapeHtml(data.make)}</td></tr><tr><th>Model</th><td>${escapeHtml(data.model)}</td></tr><tr><th>Colour</th><td>${escapeHtml(data.colour)}</td></tr><tr><th>Year of Manufacture</th><td>${escapeHtml(data.yearOfManufacture)}</td></tr><tr><th>Gearbox</th><td>${escapeHtml(data.gearbox)}</td></tr><tr><th>Top Speed</th><td>${escapeHtml(data.topSpeed)}</td></tr>`
-  );
+  const mileageRows = data.mileageHistory.length
+    ? data.mileageHistory.map((item) => `<tr><td>${escapeHtml(item.label)}</td><td>${escapeHtml(item.date)}</td><td>${escapeHtml(item.mileage)}</td></tr>`).join("")
+    : `<tr><td colspan="3" style="text-align:center;color:#7a869c;">N/A</td></tr>`;
+  html = html.replace("{{MILEAGE_ROWS}}", mileageRows);
 
-  // 5. Engine & Fuel Consumption
-  html = html.replace(
-    /<tr><th>Power<\/th><td>357 BHP<\/td><\/tr><tr><th>Max\. Torque<\/th><td>570 Nm at 3,700 rpm<\/td><\/tr><tr><th>Engine Capacity<\/th><td>1499 cc<\/td><\/tr><tr><th>Cylinders<\/th><td>3<\/td><\/tr><tr><th>Fuel Type<\/th><td>Petrol \/ Electric<\/td><\/tr><tr><th>Consumption Combined<\/th><td>134\.5 mpg<\/td><\/tr><tr><th>CO2 Emission<\/th><td>49 g\/km<\/td><\/tr><tr><th>CO2 Label<\/th><td>A<\/td><\/tr>/g,
-    `<tr><th>Power</th><td>${escapeHtml(data.power)}</td></tr><tr><th>Max. Torque</th><td>${escapeHtml(data.maxTorque)}</td></tr><tr><th>Engine Capacity</th><td>${escapeHtml(data.engineCapacity)}</td></tr><tr><th>Cylinders</th><td>${escapeHtml(data.cylinders)}</td></tr><tr><th>Fuel Type</th><td>${escapeHtml(data.fuelType)}</td></tr><tr><th>Consumption Combined</th><td>${escapeHtml(data.consumptionCombined)}</td></tr><tr><th>CO2 Emission</th><td>${escapeHtml(data.co2Emission)}</td></tr><tr><th>CO2 Label</th><td>${escapeHtml(data.co2Label)}</td></tr>`
-  );
+  const ownerCards = data.ownerHistory.length
+    ? data.ownerHistory.map((owner) => `<div class="owner-card"><h4>Owner #${escapeHtml(String(owner.ownerNumber))}</h4><table class="info-table cols-1"><tbody><tr><th>VRM</th><td>${escapeHtml(owner.vrm)}</td></tr><tr><th>Keeper Start Date</th><td>${escapeHtml(owner.keeperStartDate)}</td></tr><tr><th>Disposal Date</th><td>${escapeHtml(owner.disposalDate)}</td></tr><tr><th>Previous Keepers</th><td>${escapeHtml(String(owner.previousKeepers))}</td></tr></tbody></table></div>`).join("")
+    : `<div class="card" style="text-align:center;color:#7a869c;font-size:11px;">No keeper records available.</div>`;
+  html = html.replace("{{OWNER_CARDS}}", ownerCards);
 
-  // 6. Tyres & Wheels
-  html = html.replace(
-    /<tr><th>Tyre Data Model<\/th><td>i8 Coupe<\/td><\/tr><tr><th>Engine Power \(kW\)<\/th><td>266 kW<\/td><\/tr><tr><th>Standard Fitment<\/th><td>Yes<\/td><\/tr>/g,
-    `<tr><th>Tyre Data Model</th><td>${escapeHtml(data.tyreDataModel)}</td></tr><tr><th>Engine Power (kW)</th><td>${escapeHtml(data.enginePowerKw)}</td></tr><tr><th>Standard Fitment</th><td>${escapeHtml(data.standardFitment)}</td></tr>`
-  );
-  html = html.replace(
-    /<tr><th>Front Tyre Size<\/th><td>195\/50R20<\/td><\/tr><tr><th>Rear Tyre Size<\/th><td>215\/45R20<\/td><\/tr><tr><th>Front Pressure<\/th><td>2\.20 bar \/ 32\.00 psi<\/td><\/tr><tr><th>Rear Pressure<\/th><td>2\.20 bar \/ 32\.00 psi<\/td><\/tr><tr><th>Wheel \/ Hub<\/th><td>PCD 5x112 \| Centre bore 66\.70 mm<\/td><\/tr>/g,
-    `<tr><th>Front Tyre Size</th><td>${escapeHtml(data.frontTyreSize)}</td></tr><tr><th>Rear Tyre Size</th><td>${escapeHtml(data.rearTyreSize)}</td></tr><tr><th>Front Pressure</th><td>${escapeHtml(data.frontPressure)}</td></tr><tr><th>Rear Pressure</th><td>${escapeHtml(data.rearPressure)}</td></tr><tr><th>Wheel / Hub</th><td>${escapeHtml(data.wheelHub)}</td></tr>`
-  );
+  const plateChanges = data.plateChanges.length
+    ? data.plateChanges.map((plate) => `<div class="card" style="text-align:center;color:#55617a;font-size:11px;">${escapeHtml(plate)}</div>`).join("")
+    : `<div class="card" style="text-align:center;color:#7a869c;font-size:11px;">No plate records available.</div>`;
+  html = html.replace("{{PLATE_CHANGES}}", plateChanges);
 
-  // 7. Dimensions & Weight
-  html = html.replace(
-    /<tr><th>Width<\/th><td>1,942 mm<\/td><\/tr><tr><th>Height<\/th><td>1,297 mm<\/td><\/tr><tr><th>Length<\/th><td>4,689 mm<\/td><\/tr><tr><th>Wheel Base<\/th><td>2,800 mm<\/td><\/tr><tr><th>Kerb Weight<\/th><td>1,485 kg<\/td><\/tr><tr><th>Max\. Allowed Weight<\/th><td>1,870 kg<\/td><\/tr>/g,
-    `<tr><th>Width</th><td>${escapeHtml(data.width)}</td></tr><tr><th>Height</th><td>${escapeHtml(data.height)}</td></tr><tr><th>Length</th><td>${escapeHtml(data.length)}</td></tr><tr><th>Wheel Base</th><td>${escapeHtml(data.wheelBase)}</td></tr><tr><th>Kerb Weight</th><td>${escapeHtml(data.kerbWeight)}</td></tr><tr><th>Max. Allowed Weight</th><td>${escapeHtml(data.maxAllowedWeight)}</td></tr>`
-  );
-
-  // 8. Additional Information
-  html = html.replace(
-    /<tr><th>Fuel Tank Capacity<\/th><td>42 L<\/td><\/tr><tr><th>Number of Doors<\/th><td>3<\/td><\/tr><tr><th>Number of Seats<\/th><td>4<\/td><\/tr><tr><th>Number of Axles<\/th><td>2<\/td><\/tr><tr><th>Engine Number<\/th><td>A031P619<\/td><\/tr>/g,
-    `<tr><th>Fuel Tank Capacity</th><td>${escapeHtml(data.fuelTankCapacity)}</td></tr><tr><th>Number of Doors</th><td>${escapeHtml(data.numberOfDoors)}</td></tr><tr><th>Number of Seats</th><td>${escapeHtml(data.numberOfSeats)}</td></tr><tr><th>Number of Axles</th><td>${escapeHtml(data.numberOfAxles)}</td></tr><tr><th>Engine Number</th><td>${escapeHtml(data.engineNumber)}</td></tr>`
-  );
-
-  // 9. Mileage Check
-  html = html.replace(
-    /<tr><th>Odometer Unit<\/th><td>In miles<\/td><\/tr><tr><th>Mileage Registrations<\/th><td>5<\/td><\/tr><tr><th>First Registration<\/th><td>18 Jun 2021<\/td><\/tr><tr><th>Last Registration<\/th><td>13 Aug 2025<\/td><\/tr>/g,
-    `<tr><th>Odometer Unit</th><td>${escapeHtml(data.odometerUnit)}</td></tr><tr><th>Mileage Registrations</th><td>${escapeHtml(data.mileageRegistrations)}</td></tr><tr><th>First Registration</th><td>${escapeHtml(data.firstRegistration)}</td></tr><tr><th>Last Registration</th><td>${escapeHtml(data.lastRegistration)}</td></tr>`
-  );
-
-  // 10. Valuation
-  html = html.replace(
-    /<tr><th>On The Road \(new\)<\/th><td>£103,810<\/td><\/tr><tr><th>Valuation Mileage<\/th><td>73,731 mi<\/td><\/tr>/g,
-    `<tr><th>On The Road (new)</th><td>${escapeHtml(data.onTheRoadNewPrice)}</td></tr><tr><th>Valuation Mileage</th><td>${escapeHtml(data.valuationMileage)}</td></tr>`
-  );
+  // Replace any legacy sample literals that remain in untouched chart or chrome markup.
+  const legacyValues: Record<string, string> = {
+    MF18OBG: vrm,
+    "01 May 2026": genDate,
+    "BMW i8": fullName,
+    "BMW": escapeHtml(data.make),
+    "i8 Coupe": escapeHtml(data.tyreDataModel),
+    "i8 coupe": escapeHtml(data.tyreDataModel),
+    "i8": escapeHtml(data.model),
+    "Grey": escapeHtml(data.colour),
+    "2018": escapeHtml(data.yearOfManufacture),
+    "65,371 mi": escapeHtml(data.lastRecordedMileage),
+    "195/50R20": escapeHtml(data.frontTyreSize),
+    "215/45R20": escapeHtml(data.rearTyreSize),
+    "13 Aug 2026": escapeHtml(data.motExpiryDate),
+    "£103,810": escapeHtml(data.onTheRoadNewPrice),
+    "73,731 mi": escapeHtml(data.valuationMileage),
+    "A031P619": escapeHtml(data.engineNumber),
+    "£33,239": escapeHtml(data.valuationDealerForecourt),
+    "£31,304": escapeHtml(data.valuationTradeRetail),
+    "£28,778": escapeHtml(data.valuationPrivateClean),
+    "£27,864": escapeHtml(data.valuationAvgPrivateTrade),
+    "£27,615": escapeHtml(data.valuationPartExchange),
+    "£26,990": escapeHtml(data.valuationAuctionValue),
+    "£26,059": escapeHtml(data.valuationTradeAverage),
+    "£23,068": escapeHtml(data.valuationTradePoor),
+  };
+  for (const [legacyValue, dynamicValue] of Object.entries(legacyValues)) {
+    if (dynamicValue && dynamicValue !== "N/A") {
+      html = html.replaceAll(legacyValue, dynamicValue);
+    }
+  }
 
   return html;
 }

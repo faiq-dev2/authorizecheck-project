@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vehicle Intelligence Report &mdash; MF18OBG</title>
+<title>Vehicle Intelligence Report &mdash; {{VRM}}</title>
 <style>
 @page { size: A4; margin: 0; }
 * { box-sizing: border-box; }
@@ -214,23 +214,23 @@ body {
 
     <div class="cover-mid">
       <div class="cover-eyebrow">Full Vehicle Intelligence Report</div>
-      <div class="cover-title">Everything on record for <span>BMW i8</span></div>
+      <div class="cover-title">Everything on record for <span>{{FULL_NAME}}</span></div>
       <p class="cover-desc">Aggregated from 80+ state and automotive databases &mdash; DVLA status, MOT and mileage
       history, finance, theft and write-off checks, valuation and previous keepers, compiled into one report.</p>
 
       <div class="cover-plate-row">
-        <div class="cover-plate">MF18OBG</div>
+        <div class="cover-plate">{{VRM}}</div>
         <div>
-          <div class="cover-vehicle-name">BMW i8 &middot; 2018 &middot; Grey</div>
-          <div class="cover-vehicle-sub">Report generated 01 May 2026</div>
+          <div class="cover-vehicle-name">{{FULL_NAME}} &middot; {{YEAR}} &middot; {{COLOUR}}</div>
+          <div class="cover-vehicle-sub">Report generated {{GENERATED_DATE}}</div>
         </div>
       </div>
 
       <div class="cover-grid">
-        <div class="cover-grid-item"><div class="cover-grid-label">MOT Status</div><div class="cover-grid-value">Valid</div></div>
-        <div class="cover-grid-item"><div class="cover-grid-label">Finance</div><div class="cover-grid-value">Clear</div></div>
-        <div class="cover-grid-item"><div class="cover-grid-label">Stolen</div><div class="cover-grid-value">Clear</div></div>
-        <div class="cover-grid-item"><div class="cover-grid-label">Write-off</div><div class="cover-grid-value">None</div></div>
+        <div class="cover-grid-item"><div class="cover-grid-label">MOT Status</div><div class="cover-grid-value">{{MOT_STATUS}}</div></div>
+        <div class="cover-grid-item"><div class="cover-grid-label">Finance</div><div class="cover-grid-value">{{FINANCE_STATUS}}</div></div>
+        <div class="cover-grid-item"><div class="cover-grid-label">Stolen</div><div class="cover-grid-value">{{STOLEN_STATUS}}</div></div>
+        <div class="cover-grid-item"><div class="cover-grid-label">Write-off</div><div class="cover-grid-value">{{WRITE_OFF_CATEGORY}}</div></div>
       </div>
     </div>
 
@@ -254,8 +254,8 @@ body {
 </svg></div>
 
     <div class="cover-bottom">
-      <div class="cover-bottom-item">Registration<b>MF18OBG</b></div>
-      <div class="cover-bottom-item">Report reference<b>VI-MF18OBG-01</b></div>
+      <div class="cover-bottom-item">Registration<b>{{VRM}}</b></div>
+      <div class="cover-bottom-item">Report reference<b>{{REPORT_REFERENCE}}</b></div>
       <div class="cover-bottom-item">Prepared for<b>Private Buyer Check</b></div>
       <div class="cover-bottom-item">authorizecheck.co.uk</div>
     </div>
@@ -270,7 +270,7 @@ body {
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Table of Contents</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -299,8 +299,8 @@ body {
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 2 of 20</span>
 </div>
 </section><section class="page ">
@@ -313,7 +313,7 @@ body {
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Executive Summary</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -321,57 +321,56 @@ body {
   <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
   <div>
     <h2>Executive Summary</h2>
-    <p class="sec-sub">Headline results across every check we ran on MF18OBG</p>
+    <p class="sec-sub">Headline results across every check we ran on {{VRM}}</p>
   </div>
 </div>
 <div class="stat-grid">
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 13l1.5-4A2 2 0 0 1 6.4 8h11.2a2 2 0 0 1 1.9 1.4L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" fill="none" stroke="#2563eb" stroke-width="1.6"/><circle cx="7" cy="17.5" r="1.6" fill="#2563eb"/><circle cx="17" cy="17.5" r="1.6" fill="#2563eb"/></svg></div>
-  <div class="stat-tile-value">BMW i8</div>
+  <div class="stat-tile-value">{{FULL_NAME}}</div>
   <div class="stat-tile-label">Make & Model</div>
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg></div>
-  <div class="stat-tile-value">2018</div>
+  <div class="stat-tile-value">{{YEAR}}</div>
   <div class="stat-tile-label">Year of Manufacture</div>
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 15a8 8 0 0 1 16 0" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 15l4-5" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="15" r="1.4" fill="#2563eb"/></svg></div>
-  <div class="stat-tile-value">65,371 mi</div>
+  <div class="stat-tile-value">{{LAST_MILEAGE}}</div>
   <div class="stat-tile-label">Last Recorded Mileage</div>
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="8.5" r="3.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
-  <div class="stat-tile-value">2</div>
+  <div class="stat-tile-value">{{KEEPERS}}</div>
   <div class="stat-tile-label">Previous Keepers</div>
 </div>
 </div>
 <div class="two-col">
   <div>
-    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Finance &mdash; Clear</div>
-    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Theft &mdash; Clear</div>
-    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Written-off &mdash; Clear</div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Finance &mdash; {{FINANCE_STATUS}}</div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Theft &mdash; {{STOLEN_STATUS}}</div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Written-off &mdash; {{DAMAGE_STATUS}}</div>
   </div>
   <div>
-    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>MOT &mdash; Valid to 13 Aug 2026</div>
-    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Plate changes &mdash; None found</div>
-    <div class="clear-badge" style="background:#fdecec;border-color:#dc2626;color:#dc2626"><span class="clear-icon">✗</span>MOT advisories &mdash; 2 to review</div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>MOT &mdash; {{MOT_STATUS}} to {{MOT_EXPIRY}}</div>
+    <div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Plate changes &mdash; {{PLATE_CHANGE_STATUS}}</div>
+    <div class="clear-badge" style="background:#fdecec;border-color:#dc2626;color:#dc2626"><span class="clear-icon">✗</span>MOT advisories &mdash; {{MOT_ADVISORIES}} to review</div>
   </div>
 </div>
 <div class="card">
   <p class="card-title">Summary verdict</p>
   <p style="font-size:11px;color:#33415c;line-height:1.75;margin:0;">
-  This BMW i8 has a fully clear finance, theft and insurance write-off record, with five
-  consecutive MOT passes and no failed items. The only points noted across the vehicle's history are two tyre-wear
-  advisories on the most recent MOT test &mdash; worth inspecting before purchase, but not a barrier to a sale.
-  Mileage has increased consistently year-on-year with no irregular jumps recorded.
+  Vehicle data for {{FULL_NAME}} is reported directly from the configured VehicleData package. Finance: {{FINANCE_STATUS}};
+  theft: {{STOLEN_STATUS}}; write-off: {{DAMAGE_STATUS}}. MOT status: {{MOT_STATUS}}, with {{MOT_PASSED}} passes,
+  {{MOT_FAILED}} failures and {{MOT_ADVISORIES}} advisories. Values unavailable from the provider are shown as N/A.
   </p>
 </div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 3 of 20</span>
 </div>
 </section><section class="page ">
@@ -384,7 +383,7 @@ body {
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">General Information</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -396,7 +395,7 @@ body {
   </div>
 </div>
 <div class="two-col">
-  <div><table class="info-table cols-1"><tbody><tr><th>Make</th><td>BMW</td></tr><tr><th>Model</th><td>i8</td></tr><tr><th>Colour</th><td>Grey</td></tr><tr><th>Year of Manufacture</th><td>2018</td></tr><tr><th>Gearbox</th><td>6 speed Automatic</td></tr><tr><th>Top Speed</th><td>155 mph</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Make</th><td>{{MAKE}}</td></tr><tr><th>Model</th><td>{{MODEL}}</td></tr><tr><th>Colour</th><td>{{COLOUR}}</td></tr><tr><th>Year of Manufacture</th><td>{{YEAR}}</td></tr><tr><th>Gearbox</th><td>{{GEARBOX}}</td></tr><tr><th>Top Speed</th><td>{{TOP_SPEED}}</td></tr></tbody></table></div>
   <div class="illustration-frame">
     <svg viewBox="0 0 520 230" width="100%" style="max-width:520px" class="car-outline">
   <g fill="none" stroke="#0f2a5e" stroke-width="2.2" >
@@ -413,20 +412,20 @@ body {
     <circle cx="400" cy="70" r="4"/>
   </g>
 </svg>
-    <div class="illustration-caption">Top-down reference outline &middot; i8 coupe</div>
+    <div class="illustration-caption">Top-down reference outline &middot; vehicle reference</div>
   </div>
 </div>
 <div class="card">
   <p class="card-title">Identity check</p>
   <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Recorded make, model and colour match
-  the details held against registration <b>MF18OBG</b> on the DVLA vehicle register at the time this report
+  the details held against registration <b>{{VRM}}</b> on the DVLA vehicle register at the time this report
   was generated, with no discrepancies flagged.</p>
 </div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 4 of 20</span>
 </div>
 </section><section class="page ">
@@ -439,7 +438,7 @@ body {
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Engine & Fuel Consumption</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -451,13 +450,13 @@ body {
   </div>
 </div>
 <div class="two-col">
-  <div><table class="info-table cols-1"><tbody><tr><th>Power</th><td>357 BHP</td></tr><tr><th>Max. Torque</th><td>570 Nm at 3,700 rpm</td></tr><tr><th>Engine Capacity</th><td>1499 cc</td></tr><tr><th>Cylinders</th><td>3</td></tr><tr><th>Fuel Type</th><td>Petrol / Electric</td></tr><tr><th>Consumption Combined</th><td>134.5 mpg</td></tr><tr><th>CO2 Emission</th><td>49 g/km</td></tr><tr><th>CO2 Label</th><td>A</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Power</th><td>{{POWER}}</td></tr><tr><th>Max. Torque</th><td>{{TORQUE}}</td></tr><tr><th>Engine Capacity</th><td>{{ENGINE_CAPACITY}}</td></tr><tr><th>Cylinders</th><td>{{CYLINDERS}}</td></tr><tr><th>Fuel Type</th><td>{{FUEL_TYPE}}</td></tr><tr><th>Consumption Combined</th><td>{{CONSUMPTION}}</td></tr><tr><th>CO2 Emission</th><td>{{CO2_EMISSION}}</td></tr><tr><th>CO2 Label</th><td>{{CO2_LABEL}}</td></tr></tbody></table></div>
   <div>
     <div class="card" style="text-align:center;padding:14px;">
       <svg viewBox="0 0 180 180" width="180" height="180" class="gauge-svg">
   <path d="M 162.00 90.00 A 72.0 72.0 0 1 1 162.00 90.00" fill="none" stroke="#e5edff" stroke-width="16" stroke-linecap="butt"/>
   <path d="M 90.00 18.00 A 72.0 72.0 0 1 1 19.28 103.49" fill="none" stroke="#2563eb" stroke-width="16" stroke-linecap="round"/>
-  <text x="90.0" y="84.0" text-anchor="middle" class="gauge-num">357</text>
+  <text x="90.0" y="84.0" text-anchor="middle" class="gauge-num">{{POWER}}</text>
   <text x="90.0" y="110.0" text-anchor="middle" class="gauge-sub">BHP output</text>
 </svg>
     </div>
@@ -470,8 +469,8 @@ body {
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 5 of 20</span>
 </div>
 </section><section class="page ">
@@ -484,7 +483,7 @@ body {
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Tyre & Wheel Details</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -496,8 +495,8 @@ body {
   </div>
 </div>
 <div class="two-col">
-  <div><table class="info-table cols-1"><tbody><tr><th>Tyre Data Model</th><td>i8 Coupe</td></tr><tr><th>Engine Power (kW)</th><td>266 kW</td></tr><tr><th>Standard Fitment</th><td>Yes</td></tr></tbody></table></div>
-  <div><table class="info-table cols-1"><tbody><tr><th>Front Tyre Size</th><td>195/50R20</td></tr><tr><th>Rear Tyre Size</th><td>215/45R20</td></tr><tr><th>Front Pressure</th><td>2.20 bar / 32.00 psi</td></tr><tr><th>Rear Pressure</th><td>2.20 bar / 32.00 psi</td></tr><tr><th>Wheel / Hub</th><td>PCD 5x112 | Centre bore 66.70 mm</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Tyre Data Model</th><td>{{TYRE_MODEL}}</td></tr><tr><th>Engine Power (kW)</th><td>{{ENGINE_POWER_KW}}</td></tr><tr><th>Standard Fitment</th><td>{{FITMENT}}</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Front Tyre Size</th><td>{{FRONT_TYRE}}</td></tr><tr><th>Rear Tyre Size</th><td>{{REAR_TYRE}}</td></tr><tr><th>Front Pressure</th><td>{{FRONT_PRESSURE}}</td></tr><tr><th>Rear Pressure</th><td>{{REAR_PRESSURE}}</td></tr><tr><th>Wheel / Hub</th><td>{{WHEEL_HUB}}</td></tr></tbody></table></div>
 </div>
 <div class="two-col">
   <div class="card" style="text-align:center;">
@@ -518,8 +517,8 @@ body {
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 6 of 20</span>
 </div>
 </section><section class="page ">
@@ -532,7 +531,7 @@ body {
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">MOT History</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -552,7 +551,7 @@ body {
   <text x="90.0" y="110.0" text-anchor="middle" class="gauge-sub">Pass rate</text>
 </svg>
   </div>
-  <div><table class="info-table cols-1"><tbody><tr><th>MOT Expiry Date</th><td>13 Aug 2026</td></tr><tr><th>Tests Passed</th><td>5</td></tr><tr><th>Tests Failed</th><td>0</td></tr><tr><th>Total Advice Items</th><td>2</td></tr><tr><th>Total Items Failed</th><td>0</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>MOT Expiry Date</th><td>{{MOT_EXPIRY}}</td></tr><tr><th>Tests Passed</th><td>{{MOT_PASSED}}</td></tr><tr><th>Tests Failed</th><td>{{MOT_FAILED}}</td></tr><tr><th>Total Advice Items</th><td>{{MOT_ADVISORIES}}</td></tr><tr><th>Total Items Failed</th><td>{{MOT_FAILED}}</td></tr></tbody></table></div>
 </div>
 <div class="stat-grid">
   <div class="stat-tile">
@@ -572,7 +571,7 @@ body {
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 15a8 8 0 0 1 16 0" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 15l4-5" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="15" r="1.4" fill="#2563eb"/></svg></div>
-  <div class="stat-tile-value">13 Aug 2026</div>
+  <div class="stat-tile-value">{{MOT_EXPIRY}}</div>
   <div class="stat-tile-label">Current Expiry</div>
 </div>
 </div>
@@ -582,8 +581,8 @@ performance hybrid of this age."</div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 7 of 20</span>
 </div>
 </section><section class="page ">
@@ -596,7 +595,7 @@ performance hybrid of this age."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">MOT History</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -607,33 +606,12 @@ performance hybrid of this age."</div>
     <p class="sec-sub">Chronological record of every recorded MOT test (1 of 2)</p>
   </div>
 </div>
-<div class="mot-item">
-  <div class="mot-item-head">
-    <b>MOT #5</b>
-    <span class="mot-result-pass">Passed</span>
-  </div>
-  <div class="mot-date">Tested 13 Aug 2025, 08:02 &middot; next expiry 13 Aug 2026</div>
-  <div class="mot-advice"><b>Advisory</b>Nearside Front Tyre worn close to legal limit/worn on edge (5.2.3 (e))</div><div class="mot-advice"><b>Advisory</b>Offside Front Tyre worn close to legal limit/worn on edge (5.2.3 (e))</div>
-</div><div class="mot-item">
-  <div class="mot-item-head">
-    <b>MOT #4</b>
-    <span class="mot-result-pass">Passed</span>
-  </div>
-  <div class="mot-date">Tested 14 Aug 2024, 07:59 &middot; next expiry 13 Aug 2025</div>
-  
-</div><div class="mot-item">
-  <div class="mot-item-head">
-    <b>MOT #3</b>
-    <span class="mot-result-pass">Passed</span>
-  </div>
-  <div class="mot-date">Tested 14 Aug 2023, 07:13 &middot; next expiry 14 Aug 2024</div>
-  
-</div>
+{{MOT_TIMELINE}}
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 8 of 20</span>
 </div>
 </section><section class="page ">
@@ -646,7 +624,7 @@ performance hybrid of this age."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">MOT History</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -674,15 +652,13 @@ performance hybrid of this age."</div>
 </div>
 <div class="card" style="margin-top:6mm;">
   <p class="card-title">Reading the timeline</p>
-  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Every test in this vehicle's five-year MOT
-  history returned a pass, with only the two tyre-wear advisories noted on the most recent test in 2025. No dangerous
-  or major defects have been recorded at any point.</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">MOT timeline records are rendered directly from the VehicleData package. Available tests: {{MOT_PASSED}} passed, {{MOT_FAILED}} failed, with {{MOT_ADVISORIES}} advisories. Missing provider values are shown as N/A.</p>
 </div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 9 of 20</span>
 </div>
 </section><section class="page ">
@@ -695,7 +671,7 @@ performance hybrid of this age."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Tax & MOT Check</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -707,14 +683,14 @@ performance hybrid of this age."</div>
   </div>
 </div>
 <div class="two-col">
-  <div><table class="info-table cols-1"><tbody><tr><th>Days Left</th><td>104</td></tr><tr><th>MOT Expiry Date</th><td>13 Aug 2026</td></tr></tbody></table></div>
-  <div><table class="info-table cols-1"><tbody><tr><th>Tax Band</th><td>A</td></tr><tr><th>Single Payment (12 months)</th><td>£115</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Days Left</th><td>{{MOT_DAYS}}</td></tr><tr><th>MOT Expiry Date</th><td>{{MOT_EXPIRY}}</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Tax Band</th><td>{{TAX_BAND}}</td></tr><tr><th>Single Payment (12 months)</th><td>{{TAX_AMOUNT}}</td></tr></tbody></table></div>
 </div>
 <div class="card" style="text-align:center;">
   <svg viewBox="0 0 180 180" width="180" height="180" class="gauge-svg">
   <path d="M 162.00 90.00 A 72.0 72.0 0 1 1 162.00 90.00" fill="none" stroke="#e5edff" stroke-width="16" stroke-linecap="butt"/>
   <path d="M 90.00 18.00 A 72.0 72.0 0 0 1 160.72 103.49" fill="none" stroke="#2563eb" stroke-width="16" stroke-linecap="round"/>
-  <text x="90.0" y="84.0" text-anchor="middle" class="gauge-num">104</text>
+  <text x="90.0" y="84.0" text-anchor="middle" class="gauge-num">{{MOT_DAYS}}</text>
   <text x="90.0" y="110.0" text-anchor="middle" class="gauge-sub">days of MOT remaining</text>
 </svg>
 </div>
@@ -722,8 +698,8 @@ performance hybrid of this age."</div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 10 of 20</span>
 </div>
 </section><section class="page ">
@@ -736,7 +712,7 @@ performance hybrid of this age."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Finance Check</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -747,32 +723,30 @@ performance hybrid of this age."</div>
     <p class="sec-sub">Outstanding finance and loan information</p>
   </div>
 </div>
-<div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Clear &mdash; No outstanding loans or financial agreements on this vehicle.</div>
+<div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>{{FINANCE_STATUS}} &mdash; Finance register result for this vehicle.</div>
 <div class="card">
   <p class="card-title">What we searched</p>
-  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">We cross-referenced MF18OBG against
-  the national finance register covering hire purchase (HP), personal contract purchase (PCP) and other secured
-  lending agreements. No active or historic agreement was found tied to this vehicle identification number.</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">The vehicle was checked against the finance information returned by the VehicleData package. Values not provided by the source are shown as N/A.</p>
 </div>
 <div class="stat-grid">
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 10l8-5 8 5" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18" stroke="#2563eb" stroke-width="1.6"/></svg></div>
-  <div class="stat-tile-value">0</div>
+  <div class="stat-tile-value">{{FINANCE_ACTIVE}}</div>
   <div class="stat-tile-label">Active Agreements</div>
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 10l8-5 8 5" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18" stroke="#2563eb" stroke-width="1.6"/></svg></div>
-  <div class="stat-tile-value">0</div>
+  <div class="stat-tile-value">{{FINANCE_HISTORIC}}</div>
   <div class="stat-tile-label">Historic Agreements</div>
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  <div class="stat-tile-value">Clear</div>
+  <div class="stat-tile-value">{{FINANCE_STATUS}}</div>
   <div class="stat-tile-label">Register Result</div>
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg></div>
-  <div class="stat-tile-value">01 May 2026</div>
+  <div class="stat-tile-value">{{GENERATED_DATE}}</div>
   <div class="stat-tile-label">Checked On</div>
 </div>
 </div>
@@ -782,8 +756,8 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 11 of 20</span>
 </div>
 </section><section class="page ">
@@ -796,7 +770,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Damage History</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -807,7 +781,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <p class="sec-sub">Accident and damage records</p>
   </div>
 </div>
-<div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Clear &mdash; No record of accidents or damage reported for this vehicle.</div>
+<div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>{{DAMAGE_STATUS}} &mdash; Damage and write-off result from the vehicle data source.</div>
 <div class="illustration-frame">
   <svg viewBox="0 0 520 230" width="100%" style="max-width:520px" class="car-outline">
   <g fill="none" stroke="#0f2a5e" stroke-width="2.2" stroke-dasharray="4 3">
@@ -828,15 +802,13 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
 </div>
 <div class="card" style="margin-top:6mm;">
   <p class="card-title">What this check covers</p>
-  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Insurer-submitted accident and repair records,
-  salvage auction listings, and total-loss Category A/B/S/N markers are all checked against this vehicle
-  identification number. None were found.</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Insurer-submitted accident, repair and write-off information is shown only where returned by the VehicleData package. Write-off category: {{WRITE_OFF_CATEGORY}}.</p>
 </div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 12 of 20</span>
 </div>
 </section><section class="page ">
@@ -849,7 +821,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Stolen Status</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -860,32 +832,30 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <p class="sec-sub">Theft and security status check</p>
   </div>
 </div>
-<div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>Clear &mdash; No theft record found.</div>
+<div class="clear-badge" style="background:#eafaf0;border-color:#16a34a;color:#16a34a"><span class="clear-icon">✓</span>{{STOLEN_STATUS}} &mdash; Theft result from the vehicle data source.</div>
 <div class="card">
   <p class="card-title">What we searched</p>
-  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">MF18OBG was checked against the Police
-  National Computer stolen vehicle register and insurer-reported theft records. No match was returned at the time
-  of this report.</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">The vehicle was checked against the theft fields returned by the VehicleData package. PNC result: {{STOLEN_PNC}}; insurer result: {{STOLEN_INSURER}}.</p>
 </div>
 <div class="stat-grid">
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><rect x="5" y="11" width="14" height="9" rx="1.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
-  <div class="stat-tile-value">Clear</div>
+  <div class="stat-tile-value">{{STOLEN_PNC}}</div>
   <div class="stat-tile-label">PNC Stolen Register</div>
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><rect x="5" y="11" width="14" height="9" rx="1.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
-  <div class="stat-tile-value">Clear</div>
+  <div class="stat-tile-value">{{STOLEN_INSURER}}</div>
   <div class="stat-tile-label">Insurer Theft Record</div>
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-  <div class="stat-tile-value">0</div>
+  <div class="stat-tile-value">{{STOLEN_REPORTS}}</div>
   <div class="stat-tile-label">Open Theft Reports</div>
 </div>
   <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg></div>
-  <div class="stat-tile-value">01 May 2026</div>
+  <div class="stat-tile-value">{{GENERATED_DATE}}</div>
   <div class="stat-tile-label">Checked On</div>
 </div>
 </div>
@@ -893,8 +863,8 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 13 of 20</span>
 </div>
 </section><section class="page ">
@@ -907,7 +877,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Mileage Check</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -919,11 +889,10 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
   </div>
 </div>
 <div class="two-col">
-  <div><table class="info-table cols-1"><tbody><tr><th>Odometer Unit</th><td>In miles</td></tr><tr><th>Mileage Registrations</th><td>5</td></tr><tr><th>First Registration</th><td>18 Jun 2021</td></tr><tr><th>Last Registration</th><td>13 Aug 2025</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Odometer Unit</th><td>{{ODOMETER_UNIT}}</td></tr><tr><th>Mileage Registrations</th><td>{{MILEAGE_REGISTRATIONS}}</td></tr><tr><th>First Registration</th><td>{{FIRST_REGISTRATION}}</td></tr><tr><th>Last Registration</th><td>{{LAST_REGISTRATION}}</td></tr></tbody></table></div>
   <div class="card">
     <p class="card-title">Consistency check</p>
-    <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Mileage has risen steadily at every
-    recorded reading with no backwards jumps or unexplained gaps &mdash; a strong signal against clocking.</p>
+    <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Mileage history is shown directly from the VehicleData package. Consistency cannot be assessed when the source does not provide enough readings.</p>
   </div>
 </div>
 <div class="card">
@@ -937,17 +906,15 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
   </defs>
   <line x1="68" y1="214.0" x2="660" y2="214.0" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="218.0" text-anchor="end" class="axis-label">0</text><line x1="68" y1="166.5" x2="660" y2="166.5" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="170.5" text-anchor="end" class="axis-label">18,794</text><line x1="68" y1="119.0" x2="660" y2="119.0" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="123.0" text-anchor="end" class="axis-label">37,588</text><line x1="68" y1="71.5" x2="660" y2="71.5" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="75.5" text-anchor="end" class="axis-label">56,382</text><line x1="68" y1="24.0" x2="660" y2="24.0" stroke="#e6ebf5" stroke-width="1"/><text x="58" y="28.0" text-anchor="end" class="axis-label">75,177</text>
   <line x1="68" y1="214" x2="660" y2="214" stroke="#c7d2e8" stroke-width="1.5"/>
-  <path d="M 68.0 159.9 L 216.0 107.8 L 364.0 80.1 L 512.0 65.1 L 660.0 48.8 L 660.0 214.0 L 68.0 214.0 Z" fill="url(#lineFill)"/>
-  <path d="M 68.0 159.9 L 216.0 107.8 L 364.0 80.1 L 512.0 65.1 L 660.0 48.8" fill="none" stroke="#2563eb" stroke-width="3"/>
-  <circle cx="68.0" cy="159.9" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="68.0" y="147.9" text-anchor="middle" class="bar-val">21,394 mi</text><circle cx="216.0" cy="107.8" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="216.0" y="95.8" text-anchor="middle" class="bar-val">42,024 mi</text><circle cx="364.0" cy="80.1" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="364.0" y="68.1" text-anchor="middle" class="bar-val">52,995 mi</text><circle cx="512.0" cy="65.1" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="512.0" y="53.1" text-anchor="middle" class="bar-val">58,926 mi</text><circle cx="660.0" cy="48.8" r="4.5" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><text x="660.0" y="36.8" text-anchor="middle" class="bar-val">65,371 mi</text>
-  <text x="68.0" y="236.0" text-anchor="middle" class="bar-label">18 Jun</text><text x="216.0" y="236.0" text-anchor="middle" class="bar-label">23 Jun</text><text x="364.0" y="236.0" text-anchor="middle" class="bar-label">14 Aug</text><text x="512.0" y="236.0" text-anchor="middle" class="bar-label">14 Aug</text><text x="660.0" y="236.0" text-anchor="middle" class="bar-label">13 Aug</text>
+  <text x="364" y="130" text-anchor="middle" class="bar-val">{{LAST_MILEAGE}}</text>
+  <text x="364" y="150" text-anchor="middle" class="bar-label">Dynamic mileage history available in the table below</text>
 </svg>
 </div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 14 of 20</span>
 </div>
 </section><section class="page ">
@@ -960,7 +927,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Mileage History</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -973,19 +940,17 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
 </div>
 <table class="info-table" style="font-size:11px;">
   <thead><tr><th style="background:#eaf1ff;">Registration</th><th style="background:#eaf1ff;">Date</th><th style="background:#eaf1ff;">Mileage</th></tr></thead>
-  <tbody><tr><td>Registration #1</td><td>18 Jun 2021</td><td>21,394 mi</td></tr><tr><td>Registration #2</td><td>23 Jun 2022</td><td>42,024 mi</td></tr><tr><td>Registration #3</td><td>14 Aug 2023</td><td>52,995 mi</td></tr><tr><td>Registration #4</td><td>14 Aug 2024</td><td>58,926 mi</td></tr><tr><td>Registration #5</td><td>13 Aug 2025</td><td>65,371 mi</td></tr></tbody>
+  <tbody>{{MILEAGE_ROWS}}</tbody>
 </table>
 <div class="card">
   <p class="card-title">Average annual mileage</p>
-  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Across the five recorded readings this vehicle
-  has averaged approximately <b>10,994 miles per year</b>,
-  broadly in line with what is typical for a car of this age and class.</p>
+  <p style="font-size:10.5px;color:#55617a;line-height:1.7;margin:0;">Average annual mileage reported by the source: <b>{{AVERAGE_MILEAGE}}</b>.</p>
 </div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 15 of 20</span>
 </div>
 </section><section class="page ">
@@ -998,7 +963,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Dimensions & Weight</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -1010,7 +975,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
   </div>
 </div>
 <div class="two-col">
-  <div><table class="info-table cols-1"><tbody><tr><th>Width</th><td>1,942 mm</td></tr><tr><th>Height</th><td>1,297 mm</td></tr><tr><th>Length</th><td>4,689 mm</td></tr><tr><th>Wheel Base</th><td>2,800 mm</td></tr><tr><th>Kerb Weight</th><td>1,485 kg</td></tr><tr><th>Max. Allowed Weight</th><td>1,870 kg</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Width</th><td>{{WIDTH}}</td></tr><tr><th>Height</th><td>{{HEIGHT}}</td></tr><tr><th>Length</th><td>{{LENGTH}}</td></tr><tr><th>Wheel Base</th><td>{{WHEEL_BASE}}</td></tr><tr><th>Kerb Weight</th><td>{{KERB_WEIGHT}}</td></tr><tr><th>Max. Allowed Weight</th><td>{{MAX_WEIGHT}}</td></tr></tbody></table></div>
   <div class="illustration-frame">
     <svg viewBox="0 0 560 170" width="100%" style="max-width:560px">
   <g fill="none" stroke="#2563eb" stroke-width="2.4">
@@ -1034,8 +999,8 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 16 of 20</span>
 </div>
 </section><section class="page ">
@@ -1048,7 +1013,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Additional Information</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -1060,26 +1025,26 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
   </div>
 </div>
 <div class="two-col">
-  <div><table class="info-table cols-1"><tbody><tr><th>Fuel Tank Capacity</th><td>42 L</td></tr><tr><th>Number of Doors</th><td>3</td></tr><tr><th>Number of Seats</th><td>4</td></tr><tr><th>Number of Axles</th><td>2</td></tr><tr><th>Engine Number</th><td>A031P619</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Fuel Tank Capacity</th><td>{{FUEL_TANK}}</td></tr><tr><th>Number of Doors</th><td>{{DOORS}}</td></tr><tr><th>Number of Seats</th><td>{{SEATS}}</td></tr><tr><th>Number of Axles</th><td>{{AXLES}}</td></tr><tr><th>Engine Number</th><td>{{ENGINE_NUMBER}}</td></tr></tbody></table></div>
   <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);">
     <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 13l1.5-4A2 2 0 0 1 6.4 8h11.2a2 2 0 0 1 1.9 1.4L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" fill="none" stroke="#2563eb" stroke-width="1.6"/><circle cx="7" cy="17.5" r="1.6" fill="#2563eb"/><circle cx="17" cy="17.5" r="1.6" fill="#2563eb"/></svg></div>
-  <div class="stat-tile-value">3</div>
+  <div class="stat-tile-value">{{DOORS}}</div>
   <div class="stat-tile-label">Doors</div>
 </div>
     <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="8.5" r="3.5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
-  <div class="stat-tile-value">4</div>
+  <div class="stat-tile-value">{{SEATS}}</div>
   <div class="stat-tile-label">Seats</div>
 </div>
     <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="8" fill="none" stroke="#2563eb" stroke-width="1.6"/><circle cx="12" cy="12" r="3" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
-  <div class="stat-tile-value">2</div>
+  <div class="stat-tile-value">{{AXLES}}</div>
   <div class="stat-tile-label">Axles</div>
 </div>
     <div class="stat-tile">
   <div class="stat-tile-icon"><svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="9" width="13" height="8" rx="1" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M16 12h3l2 2v3h-5" fill="none" stroke="#2563eb" stroke-width="1.6"/><path d="M6 9V6h3v3M10 9V6h2v3" fill="none" stroke="#2563eb" stroke-width="1.6"/></svg></div>
-  <div class="stat-tile-value">42 L</div>
+  <div class="stat-tile-value">{{FUEL_TANK}}</div>
   <div class="stat-tile-label">Fuel Tank</div>
 </div>
   </div>
@@ -1087,8 +1052,8 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 17 of 20</span>
 </div>
 </section><section class="page ">
@@ -1101,7 +1066,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Vehicle Valuation</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -1118,14 +1083,14 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
   <rect x="64.0" y="42.5" width="62.2" height="187.5" rx="4" fill="#2563eb"/><text x="95.1" y="34.5" text-anchor="middle" class="bar-val">£33,239</text><text x="95.1" y="248.0" text-anchor="middle" class="bar-label">Dealer</text><text x="95.1" y="261.0" text-anchor="middle" class="bar-label">Forecourt</text><rect x="140.2" y="53.4" width="62.2" height="176.6" rx="4" fill="#2563eb"/><text x="171.4" y="45.4" text-anchor="middle" class="bar-val">£31,304</text><text x="171.4" y="248.0" text-anchor="middle" class="bar-label">Trade</text><text x="171.4" y="261.0" text-anchor="middle" class="bar-label">Retail</text><rect x="216.5" y="67.7" width="62.2" height="162.3" rx="4" fill="#f59e0b"/><text x="247.6" y="59.7" text-anchor="middle" class="bar-val">£28,778</text><text x="247.6" y="248.0" text-anchor="middle" class="bar-label">Private</text><text x="247.6" y="261.0" text-anchor="middle" class="bar-label">Clean</text><rect x="292.8" y="72.8" width="62.2" height="157.2" rx="4" fill="#2563eb"/><text x="323.9" y="64.8" text-anchor="middle" class="bar-val">£27,864</text><text x="323.9" y="248.0" text-anchor="middle" class="bar-label">Avg Private</text><text x="323.9" y="261.0" text-anchor="middle" class="bar-label">Trade</text><rect x="369.0" y="74.2" width="62.2" height="155.8" rx="4" fill="#2563eb"/><text x="400.1" y="66.2" text-anchor="middle" class="bar-val">£27,615</text><text x="400.1" y="248.0" text-anchor="middle" class="bar-label">Part</text><text x="400.1" y="261.0" text-anchor="middle" class="bar-label">Exchange</text><rect x="445.2" y="77.8" width="62.2" height="152.2" rx="4" fill="#2563eb"/><text x="476.4" y="69.8" text-anchor="middle" class="bar-val">£26,990</text><text x="476.4" y="248.0" text-anchor="middle" class="bar-label">Auction</text><text x="476.4" y="261.0" text-anchor="middle" class="bar-label">Value</text><rect x="521.5" y="83.0" width="62.2" height="147.0" rx="4" fill="#2563eb"/><text x="552.6" y="75.0" text-anchor="middle" class="bar-val">£26,059</text><text x="552.6" y="248.0" text-anchor="middle" class="bar-label">Trade</text><text x="552.6" y="261.0" text-anchor="middle" class="bar-label">Average</text><rect x="597.8" y="99.9" width="62.2" height="130.1" rx="4" fill="#2563eb"/><text x="628.9" y="91.9" text-anchor="middle" class="bar-val">£23,068</text><text x="628.9" y="248.0" text-anchor="middle" class="bar-label">Trade Poor</text>
 </svg></div>
 <div class="two-col">
-  <div><table class="info-table cols-1"><tbody><tr><th>On The Road (new)</th><td>£103,810</td></tr><tr><th>Valuation Mileage</th><td>73,731 mi</td></tr></tbody></table></div>
-  <div><table class="info-table cols-1"><tbody><tr><th>Valuation Book</th><td>Direct</td></tr><tr><th>First MOT Registration</th><td>07 Mar 2018</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>On The Road (new)</th><td>{{NEW_PRICE}}</td></tr><tr><th>Valuation Mileage</th><td>{{VALUATION_MILEAGE}}</td></tr></tbody></table></div>
+  <div><table class="info-table cols-1"><tbody><tr><th>Valuation Book</th><td>{{VALUATION_BOOK}}</td></tr><tr><th>First MOT Registration</th><td>{{FIRST_MOT_DATE}}</td></tr></tbody></table></div>
 </div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 18 of 20</span>
 </div>
 </section><section class="page ">
@@ -1138,7 +1103,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Owner History & Plate Changes</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -1149,13 +1114,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <p class="sec-sub">Previous keepers and ownership records</p>
   </div>
 </div>
-<div class="two-col"><div class="owner-card">
-  <h4>Owner #1</h4>
-  <table class="info-table cols-1"><tbody><tr><th>VRM</th><td>MF18OBG</td></tr><tr><th>Keeper Start Date</th><td>22 Nov 2022</td></tr><tr><th>Disposal Date</th><td>07 Nov 2022</td></tr><tr><th>Previous Keepers</th><td>2</td></tr></tbody></table>
-</div><div class="owner-card">
-  <h4>Owner #2</h4>
-  <table class="info-table cols-1"><tbody><tr><th>VRM</th><td>MF18OBG</td></tr><tr><th>Keeper Start Date</th><td>18 Mar 2018</td></tr><tr><th>Disposal Date</th><td>18 Mar 2018</td></tr><tr><th>Previous Keepers</th><td>1</td></tr></tbody></table>
-</div></div>
+<div class="two-col">{{OWNER_CARDS}}</div>
 <div style="margin-top:6mm;">
   <div class="sec-title-row">
   <div class="sec-icon"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="8" width="18" height="8" rx="1.5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M7 12h1M17 12h1" stroke="#fff" stroke-width="1.6"/></svg></div>
@@ -1164,13 +1123,13 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <p class="sec-sub">Registration plate history and changes</p>
   </div>
 </div>
-  <div class="card" style="text-align:center;color:#7a869c;font-size:11px;">No plate records found for MF18OBG.</div>
+  {{PLATE_CHANGES}}
 </div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 19 of 20</span>
 </div>
 </section><section class="page ">
@@ -1183,7 +1142,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
     <div class="pg-brand-text"><span class="b1">Authorize</span><span class="b2">Check</span></div>
   </div>
   <div class="pg-section-label">Glossary & Disclaimer</div>
-  <div class="pg-reg">MF18OBG</div>
+  <div class="pg-reg">{{VRM}}</div>
 </div>
   <div class="pg-body">
     
@@ -1202,7 +1161,7 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
   This report is compiled from DVLA, DVSA and third-party commercial data sources believed to be reliable at the
   time of generation. AuthorizeCheck aggregates and presents this information for guidance only; it does not
   constitute a guarantee of a vehicle's condition, history or legal status, and buyers are encouraged to arrange
-  an independent physical inspection before purchase. Report reference VI-MF18OBG-01, generated 01 May 2026.
+  an independent physical inspection before purchase. Report reference {{REPORT_REFERENCE}}, generated {{GENERATED_DATE}}.
 </div>
 <div style="margin-top:10mm; text-align:center;">
   <svg viewBox="0 0 48 56" width="36" height="36">
@@ -1215,8 +1174,8 @@ of checking &mdash; always worth re-confirming on the day of purchase."</div>
 
   </div>
   <div class="pg-footer">
-  <span>Vehicle Intelligence Report &middot; MF18OBG</span>
-  <span class="pg-footer-mid">Generated 01 May 2026 &middot; authorizecheck.co.uk</span>
+  <span>Vehicle Intelligence Report &middot; {{VRM}}</span>
+  <span class="pg-footer-mid">Generated {{GENERATED_DATE}} &middot; authorizecheck.co.uk</span>
   <span>Page 20 of 20</span>
 </div>
 </section>
