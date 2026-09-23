@@ -11,6 +11,7 @@ export function AdminGenerateReport() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("");
+  const [downloadFilename, setDownloadFilename] = useState("");
   const [orderId, setOrderId] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -19,6 +20,7 @@ export function AdminGenerateReport() {
     setError("");
     setMessage("");
     setDownloadUrl("");
+    setDownloadFilename("");
     setOrderId("");
 
     try {
@@ -40,8 +42,40 @@ export function AdminGenerateReport() {
 
       setAuthenticated(true);
       setOrderId(data.orderId);
-      setDownloadUrl(data.downloadUrl);
-      setMessage("Report generated successfully. It is ready to download.");
+
+      const filename = data.filename || `AuthorizeCheck-Report-${regNumber.trim().toUpperCase()}.pdf`;
+      setDownloadFilename(filename);
+
+      let targetUrl = data.downloadUrl;
+
+      // When the server sends back the PDF binary as base64, construct a local Blob URL
+      // and trigger automatic browser download so the user gets the PDF immediately
+      if (data.pdfBase64) {
+        try {
+          const binaryString = window.atob(data.pdfBase64);
+          const len = binaryString.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          const blob = new Blob([bytes], { type: "application/pdf" });
+          const blobUrl = window.URL.createObjectURL(blob);
+          targetUrl = blobUrl;
+
+          // Auto-trigger browser download
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        } catch (blobErr) {
+          console.error("Error creating direct blob download:", blobErr);
+        }
+      }
+
+      setDownloadUrl(targetUrl);
+      setMessage("Report generated successfully! Download has started automatically.");
     } catch (requestError: unknown) {
       setError(requestError instanceof Error ? requestError.message : "Unable to generate report.");
     } finally {
@@ -134,7 +168,11 @@ export function AdminGenerateReport() {
           {downloadUrl && (
             <div className="mt-6 pt-5 border-t border-surface-container flex flex-col gap-3">
               <div className="font-body-sm text-body-sm text-on-surface-variant">Order reference: <strong className="text-on-surface">{orderId}</strong></div>
-              <a className="w-full h-12 rounded-lg bg-primary text-white font-label-md text-label-md font-bold inline-flex items-center justify-center gap-2 hover:bg-primary-container transition-colors" href={downloadUrl}>
+              <a
+                className="w-full h-12 rounded-lg bg-primary text-white font-label-md text-label-md font-bold inline-flex items-center justify-center gap-2 hover:bg-primary-container transition-colors"
+                href={downloadUrl}
+                download={downloadFilename || `AuthorizeCheck-Report-${regNumber.trim().toUpperCase()}.pdf`}
+              >
                 <span className="material-symbols-outlined text-[20px]">download</span>Download PDF report
               </a>
             </div>

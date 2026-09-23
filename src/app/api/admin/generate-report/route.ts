@@ -47,10 +47,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const filename = `AuthorizeCheck-Report-${cleanRegNumber}.pdf`;
+    const pdfBase64 = result.pdfBuffer ? result.pdfBuffer.toString("base64") : undefined;
+
     return NextResponse.json({
       success: true,
       orderId: order.orderId,
       status: "completed",
+      filename,
+      pdfBase64,
       pdfUrl: result.pdfUrl,
       downloadUrl: `/api/download-report?orderId=${encodeURIComponent(order.orderId)}`,
     });

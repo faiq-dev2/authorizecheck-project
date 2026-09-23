@@ -14,8 +14,26 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Missing orderId parameter" }, { status: 400 });
     }
 
-    const order = await getOrder(orderId.trim());
+    const cleanOrderId = orderId.trim();
+    const order = await getOrder(cleanOrderId);
     if (!order) {
+      // Fallback: check if a PDF file for this order exists in /tmp or public/reports
+      try {
+        if (fs.existsSync(/*turbopackIgnore: true*/ "/tmp")) {
+          const files = fs.readdirSync(/*turbopackIgnore: true*/ "/tmp");
+          const match = files.find((f) => f.includes(cleanOrderId) && f.endsWith(".pdf"));
+          if (match) {
+            const fileBuffer = fs.readFileSync(path.join("/tmp", match));
+            return new NextResponse(fileBuffer, {
+              status: 200,
+              headers: {
+                "Content-Type": "application/pdf",
+                "Content-Disposition": `attachment; filename="${match}"`,
+              },
+            });
+          }
+        }
+      } catch {}
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 

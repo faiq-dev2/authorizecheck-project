@@ -69,7 +69,7 @@ export async function generateReportForOrder(
       errorMessage: emailError,
     });
 
-    return { order: updatedOrder, pdfUrl, alreadyCompleted: false };
+    return { order: updatedOrder, pdfUrl, pdfBuffer, alreadyCompleted: false };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     await updateOrderStatus(orderId, "failed", { errorMessage });

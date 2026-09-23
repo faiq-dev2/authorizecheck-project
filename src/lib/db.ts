@@ -4,26 +4,31 @@ import { Order, OrderStatus } from "./types";
 
 const DATA_DIR = path.join(process.cwd(), ".data");
 const ORDERS_FILE = path.join(DATA_DIR, "orders.json");
+const TMP_ORDERS_FILE = path.join("/tmp", "orders.json");
 
 // In-memory cache for fast access and serverless persistence within execution context
 let ordersMemory: Record<string, Order> = {};
 
 function ensureFileStore(): void {
   try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
-    if (!fs.existsSync(ORDERS_FILE)) {
-      fs.writeFileSync(ORDERS_FILE, JSON.stringify({}, null, 2), "utf-8");
-    } else {
+    if (fs.existsSync(ORDERS_FILE)) {
       const raw = fs.readFileSync(ORDERS_FILE, "utf-8");
       if (raw.trim()) {
-        ordersMemory = JSON.parse(raw);
+        ordersMemory = { ...ordersMemory, ...JSON.parse(raw) };
+        return;
       }
     }
-  } catch (err) {
-    console.warn("[DB] Note: Using memory store (local filesystem unavailable in read-only environment):", err);
-  }
+  } catch {}
+
+  try {
+    if (fs.existsSync(TMP_ORDERS_FILE)) {
+      const raw = fs.readFileSync(TMP_ORDERS_FILE, "utf-8");
+      if (raw.trim()) {
+        ordersMemory = { ...ordersMemory, ...JSON.parse(raw) };
+        return;
+      }
+    }
+  } catch {}
 }
 
 // Initial load
@@ -35,15 +40,11 @@ function persistToFile(): void {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
     fs.writeFileSync(ORDERS_FILE, JSON.stringify(ordersMemory, null, 2), "utf-8");
-  } catch {
-    // In serverless read-only environment /tmp can be used or fallback silently
-    try {
-      const tmpFile = path.join("/tmp", "orders.json");
-      fs.writeFileSync(tmpFile, JSON.stringify(ordersMemory, null, 2), "utf-8");
-    } catch {
-      // Memory store remains active for lifecycle
-    }
-  }
+  } catch {}
+
+  try {
+    fs.writeFileSync(TMP_ORDERS_FILE, JSON.stringify(ordersMemory, null, 2), "utf-8");
+  } catch {}
 }
 
 export async function createOrder(data: {
