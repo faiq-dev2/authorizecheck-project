@@ -18,7 +18,7 @@ const PLANS = [
     label: "Full Comprehensive — £54.99",
     name: "Full Comprehensive",
     price: "£54.99",
-    paymentUrl: "https://buy.stripe.com/4gMbJ09jpb4u3SC2mTgw000",
+    paymentUrl: "https://www.paypal.com/ncp/payment/CYXREAHDVD6JC",
   },
 ] as const;
 
