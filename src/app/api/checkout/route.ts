@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       paymentUrl:
         paymentUrl ||
         (planId === "basic"
-          ? "https://checkout.teya.com/payments/_0XBPWQQ_e1203ea3-5879-44f8-b38f-e2a18d073dbf"
+          ? "https://checkout.teya.com/payments/_0XBPWQQ_c989e348-6444-49cf-8f4e-d25dc15063cb"
           : "https://checkout.teya.com/payments/_0XBPWQQ_14926e96-d2bd-45a2-a3ec-26f5607ec16a"),
       submittedAt,
       terms: {

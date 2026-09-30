@@ -11,14 +11,14 @@ const PLANS = [
     label: "Basic Check — £49.99",
     name: "Basic Check",
     price: "£49.99",
-    paymentUrl: "https://checkout.teya.com/payments/_0XBPWQQ_e1203ea3-5879-44f8-b38f-e2a18d073dbf",
+    paymentUrl: "https://checkout.teya.com/payments/_0XBPWQQ_c989e348-6444-49cf-8f4e-d25dc15063cb",
   },
   {
     id: "full",
     label: "Full Comprehensive — £54.99",
     name: "Full Comprehensive",
     price: "£54.99",
-    paymentUrl: "https://checkout.teya.com/payments/_0XBPWQQ_14926e96-d2bd-45a2-a3ec-26f5607ec16a",
+    paymentUrl: "https://checkout.teya.com/payments/_0XBPWQQ_ebabb8c7-9e89-4b23-a4f1-d798fbe33c1b",
   },
 ] as const;
 
@@ -138,16 +138,8 @@ export function CheckoutForm() {
 
       showToast("Order initialized! Redirecting to secure payment…", "success");
 
-      // 4. Redirect customer to payment URL with order ref appended
-      const returnUrl = encodeURIComponent(
-        `${window.location.origin}/thank-you?order=${encodeURIComponent(orderId)}`
-      );
-      const separator = selected.paymentUrl.includes("?") ? "&" : "?";
-      const paymentRedirect = `${selected.paymentUrl}${separator}ref=${encodeURIComponent(orderId)}&redirect=${returnUrl}`;
-
       // Redirect to external payment provider checkout
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-      window.location.href = paymentRedirect;
+      window.location.href = selected.paymentUrl;
     } catch (err: unknown) {
       console.error("Order creation error:", err);
       showToast(
