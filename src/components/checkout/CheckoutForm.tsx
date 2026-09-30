@@ -11,14 +11,14 @@ const PLANS = [
     label: "Basic Check — £49.99",
     name: "Basic Check",
     price: "£49.99",
-    paymentUrl: "https://buy.stripe.com/bJe9ASant8WmexggdJgw001",
+    paymentUrl: "https://checkout.teya.com/payments/_0XBPWQQ_e1203ea3-5879-44f8-b38f-e2a18d073dbf",
   },
   {
     id: "full",
     label: "Full Comprehensive — £54.99",
     name: "Full Comprehensive",
     price: "£54.99",
-    paymentUrl: "https://www.paypal.com/ncp/payment/CYXREAHDVD6JC",
+    paymentUrl: "https://checkout.teya.com/payments/_0XBPWQQ_14926e96-d2bd-45a2-a3ec-26f5607ec16a",
   },
 ] as const;
 

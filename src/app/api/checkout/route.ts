@@ -67,8 +67,8 @@ export async function POST(request: NextRequest) {
       paymentUrl:
         paymentUrl ||
         (planId === "basic"
-          ? "https://pay.sumup.com/b2c/Q391KWPF"
-          : "https://pay.sumup.com/b2c/QM0IAQ2Z"),
+          ? "https://checkout.teya.com/payments/_0XBPWQQ_e1203ea3-5879-44f8-b38f-e2a18d073dbf"
+          : "https://checkout.teya.com/payments/_0XBPWQQ_14926e96-d2bd-45a2-a3ec-26f5607ec16a"),
       submittedAt,
       terms: {
         volition: Boolean(terms.volition),
