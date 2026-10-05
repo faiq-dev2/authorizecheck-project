@@ -86,6 +86,38 @@ export default function AdminOrdersPage() {
     }
   }
 
+  async function handleSendPaymentConfirmation(orderId: string) {
+    setActionLoading((prev) => ({ ...prev, [`email_${orderId}`]: true }));
+    setMessage("");
+
+    try {
+      const res = await fetch("/api/admin/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": password,
+        },
+        body: JSON.stringify({
+          orderId,
+          action: "send_payment_confirmation",
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setMessage(data.message || `Payment confirmation email sent for #${orderId}!`);
+        await fetchOrders(password);
+      } else {
+        setMessage(`Failed: ${data.error || "Could not send confirmation email"}`);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Error";
+      setMessage(`Action failed: ${msg}`);
+    } finally {
+      setActionLoading((prev) => ({ ...prev, [`email_${orderId}`]: false }));
+    }
+  }
+
   const filteredOrders = orders.filter((o) => {
     if (filter !== "all" && o.status !== filter) return false;
     if (search.trim()) {
@@ -339,6 +371,21 @@ export default function AdminOrdersPage() {
                                     <span>PDF</span>
                                   </a>
                                 )}
+
+                                <button
+                                  className="px-2.5 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 text-[12px] font-semibold inline-flex items-center gap-1 transition-all disabled:opacity-50 cursor-pointer border border-blue-200"
+                                  disabled={actionLoading[`email_${order.orderId}`]}
+                                  onClick={() => handleSendPaymentConfirmation(order.orderId)}
+                                  title="Dispatch payment confirmation email to client (informs 3–4 hour delivery timeline)"
+                                  type="button"
+                                >
+                                  {actionLoading[`email_${order.orderId}`] ? (
+                                    <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
+                                  ) : (
+                                    <span className="material-symbols-outlined text-[16px]">mail</span>
+                                  )}
+                                  <span>{order.paymentEmailSentAt ? "Resend 3–4h Email" : "Send 3–4h Email"}</span>
+                                </button>
 
                                 <button
                                   className="px-3 py-1.5 rounded bg-secondary hover:bg-secondary-container text-white text-[12px] font-bold inline-flex items-center gap-1 transition-all disabled:opacity-50 cursor-pointer shadow-sm"

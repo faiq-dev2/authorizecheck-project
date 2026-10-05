@@ -14,6 +14,9 @@ export interface Order {
   reportGeneratedAt?: string;
   pdfUrl?: string;
   emailSentAt?: string;
+  paymentConfirmedAt?: string;
+  paymentEmailSentAt?: string;
+  paymentMethod?: string;
   errorMessage?: string;
 }
 

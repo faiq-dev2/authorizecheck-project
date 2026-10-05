@@ -119,5 +119,6 @@ npm run lint
 | `/api/generate-report` | `POST` | Fetches vehicle data, renders PDF, uploads to Blob, and emails customer |
 | `/api/order-status` | `GET` | Polling endpoint for order state and PDF download URL |
 | `/api/download-report` | `GET` | Direct stream / redirect to the generated PDF report |
-| `/api/admin/orders` | `GET/POST` | Admin orders list and `mark_paid_generate` action |
+| `/api/admin/orders` | `GET/POST` | Admin orders list, `send_payment_confirmation`, and `mark_paid_generate` action |
 | `/api/checkout` | `POST` | Checkout form submission email dispatcher to admin |
+| `/api/payment-success` | `GET/POST` | Dispatches payment confirmation email to client with 3–4 hour delivery timeline |

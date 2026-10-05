@@ -97,11 +97,25 @@ export async function updateOrderStatus(
   if (extra.reportGeneratedAt) order.reportGeneratedAt = extra.reportGeneratedAt;
   if (extra.pdfUrl) order.pdfUrl = extra.pdfUrl;
   if (extra.emailSentAt) order.emailSentAt = extra.emailSentAt;
+  if (extra.paymentConfirmedAt) order.paymentConfirmedAt = extra.paymentConfirmedAt;
+  if (extra.paymentEmailSentAt) order.paymentEmailSentAt = extra.paymentEmailSentAt;
+  if (extra.paymentMethod) order.paymentMethod = extra.paymentMethod;
   if (extra.errorMessage !== undefined) order.errorMessage = extra.errorMessage;
 
   ordersMemory[orderId] = order;
   persistToFile();
   return order;
+}
+
+export async function markOrderPaymentConfirmed(
+  orderId: string,
+  extra: Partial<Order> = {}
+): Promise<Order | null> {
+  const now = new Date().toISOString();
+  return updateOrderStatus(orderId, "processing", {
+    paymentConfirmedAt: extra.paymentConfirmedAt || now,
+    ...extra,
+  });
 }
 
 export async function listAllOrders(): Promise<Order[]> {

@@ -116,6 +116,9 @@ export function CheckoutForm() {
         localStorage.setItem("vdg_order_id", orderId);
         localStorage.setItem("vdg_reg_number", cleanVrm);
         localStorage.setItem("vdg_customer_email", email.trim());
+        localStorage.setItem("vdg_customer_name", name.trim());
+        localStorage.setItem("vdg_plan_name", selected.name);
+        localStorage.setItem("vdg_price", selected.price);
       } catch {
         // Continue if localStorage blocked
       }

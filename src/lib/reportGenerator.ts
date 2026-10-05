@@ -1,5 +1,6 @@
 import { getOrder, updateOrderStatus } from "@/lib/db";
 import { sendCustomerReportEmail } from "@/lib/emailReport";
+import { sendCustomerPaymentConfirmationEmail } from "@/lib/customerPaymentEmail";
 import { generatePdfReport } from "@/lib/pdf";
 import { storePdfReport } from "@/lib/storage";
 import { fetchVehicleData } from "@/lib/vehicleDataGlobal";
@@ -22,6 +23,25 @@ export async function generateReportForOrder(
   }
 
   await updateOrderStatus(orderId, "processing");
+
+  // Ensure customer payment confirmation email (with 3-4 hour delivery notice) is dispatched
+  if (!order.paymentEmailSentAt && order.customerEmail && !order.customerEmail.includes("@authorizecheck.local")) {
+    sendCustomerPaymentConfirmationEmail({
+      orderId,
+      customerName: order.customerName,
+      customerEmail: order.customerEmail,
+      regNumber: order.regNumber,
+      planName: order.planName,
+      price: order.price,
+    }).then(async (res) => {
+      if (res.success) {
+        await updateOrderStatus(orderId, "processing", {
+          paymentEmailSentAt: new Date().toISOString(),
+          paymentConfirmedAt: order.paymentConfirmedAt || new Date().toISOString(),
+        });
+      }
+    }).catch((err) => console.warn("[GenerateReport] Payment notice note:", err));
+  }
 
   try {
     console.log(`[GenerateReport] Fetching vehicle data for ${order.regNumber}...`);

@@ -32,6 +32,38 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Order not found" }, { status: 404 });
     }
 
+    if (action === "send_payment_confirmation") {
+      const { sendCustomerPaymentConfirmationEmail } = await import("@/lib/customerPaymentEmail");
+      const { updateOrderStatus } = await import("@/lib/db");
+      
+      const emailResult = await sendCustomerPaymentConfirmationEmail({
+        orderId: order.orderId,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        regNumber: order.regNumber,
+        planName: order.planName,
+        price: order.price,
+      });
+
+      if (!emailResult.success) {
+        return NextResponse.json(
+          { success: false, error: emailResult.error || "Failed to send email to client." },
+          { status: 500 }
+        );
+      }
+
+      const updated = await updateOrderStatus(order.orderId, order.status, {
+        paymentEmailSentAt: new Date().toISOString(),
+        paymentConfirmedAt: order.paymentConfirmedAt || new Date().toISOString(),
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: `Payment confirmation email (3–4 hours delivery) sent to ${order.customerEmail}.`,
+        order: updated,
+      });
+    }
+
     if (action === "mark_paid_generate") {
       const result = await generateReportForOrder(order.orderId);
       return NextResponse.json({
