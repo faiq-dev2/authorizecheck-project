@@ -23,6 +23,7 @@ const PLANS = [
 ] as const;
 
 type PlanId = (typeof PLANS)[number]["id"];
+type PaymentMethod = "Visa" | "Mastercard";
 
 function resolvePlan(value: string | null): PlanId {
   if (value === "basic" || value === "full") return value;
@@ -50,6 +51,7 @@ export function CheckoutForm() {
     return "";
   });
   const [plan, setPlan] = useState<PlanId>(planParam);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("Visa");
   const [prevParams, setPrevParams] = useState({ plan: planParam, vrm: vrmParam });
   const [terms, setTerms] = useState({
     volition: false,
@@ -135,6 +137,7 @@ export function CheckoutForm() {
           planName: selected.name,
           price: selected.price,
           paymentUrl: selected.paymentUrl,
+          paymentMethod,
           terms,
         }),
       }).catch((err) => console.warn("Admin notification dispatch note:", err));
@@ -356,6 +359,47 @@ export function CheckoutForm() {
             {selected.price}
           </span>
         </div>
+
+        <fieldset className="flex flex-col gap-space-xs">
+          <legend className="font-label-lg text-label-lg text-on-surface">
+            Payment method <span className="text-error">*</span>
+          </legend>
+          <div className="grid grid-cols-2 gap-space-sm">
+            {(["Visa", "Mastercard"] as const).map((method) => (
+              <label
+                key={method}
+                className={`flex min-h-14 items-center gap-space-sm rounded-lg border px-space-sm py-space-xs cursor-pointer transition-colors ${
+                  paymentMethod === method
+                    ? "border-secondary bg-surface-container-lowest ring-1 ring-secondary"
+                    : "border-outline-variant bg-surface-container-low hover:bg-surface-container"
+                }`}
+              >
+                <input
+                  checked={paymentMethod === method}
+                  className="h-4 w-4 accent-secondary shrink-0"
+                  name="paymentMethod"
+                  onChange={() => setPaymentMethod(method)}
+                  required
+                  type="radio"
+                  value={method}
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  alt=""
+                  className="h-7 w-12 shrink-0 object-contain"
+                  src={
+                    method === "Visa"
+                      ? "https://cdn.simpleicons.org/visa/1A1F71"
+                      : "https://cdn.simpleicons.org/mastercard/EB001B"
+                  }
+                />
+                <span className="font-label-md text-label-md text-on-surface">
+                  {method}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         <button
           className="w-full h-12 inline-flex items-center justify-center gap-space-xs rounded-lg bg-secondary-container hover:bg-secondary text-on-secondary font-label-lg text-label-lg font-bold shadow-md hover:shadow-xl transition-all disabled:opacity-60 disabled:pointer-events-none cursor-pointer"

@@ -8,6 +8,7 @@ export interface OrderNotificationPayload {
   planId: string;
   planName: string;
   price: string;
+  paymentMethod: "Visa" | "Mastercard";
   paymentUrl: string;
   submittedAt: string;
   terms: {
@@ -33,6 +34,7 @@ export function generateOrderEmailHtml(order: OrderNotificationPayload): string 
   const safeVrm = escapeHtml(order.vrm.toUpperCase());
   const safePlanName = escapeHtml(order.planName);
   const safePrice = escapeHtml(order.price);
+  const safePaymentMethod = escapeHtml(order.paymentMethod);
   const safeOrderId = escapeHtml(order.orderId);
   const safeDate = escapeHtml(order.submittedAt);
 
@@ -155,6 +157,15 @@ export function generateOrderEmailHtml(order: OrderNotificationPayload): string 
                     ${safePrice}
                   </td>
                 </tr>
+                <!-- Payment Method -->
+                <tr>
+                  <td style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: #44474d; background-color: #f8faff; border-bottom: 1px solid #edf2f9;">
+                    Selected Payment Method
+                  </td>
+                  <td style="padding: 12px 16px; font-size: 14px; font-weight: 700; color: #000615; background-color: #f8faff; border-bottom: 1px solid #edf2f9;">
+                    ${safePaymentMethod}
+                  </td>
+                </tr>
                 <!-- Submission Timestamp -->
                 <tr>
                   <td style="padding: 12px 16px; font-size: 13px; font-weight: 600; color: #44474d; background-color: #f8faff; border-bottom-left-radius: 8px;">
@@ -232,6 +243,7 @@ CUSTOMER DETAILS:
 PACKAGE & PAYMENT:
   Package:       ${order.planName} (${order.planId})
   Amount:        ${order.price}
+  Payment Method: ${order.paymentMethod}
 
 ---------------------------------------------------------------
 ACKNOWLEDGEMENTS & LEGAL CONSENTS:

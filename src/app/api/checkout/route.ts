@@ -6,7 +6,17 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, vrm, planId, planName, price, paymentUrl, terms } = body;
+    const {
+      name,
+      email,
+      vrm,
+      planId,
+      planName,
+      price,
+      paymentUrl,
+      paymentMethod,
+      terms,
+    } = body;
 
     // Validation
     if (!name || typeof name !== "string" || name.trim().length === 0) {
@@ -26,6 +36,13 @@ export async function POST(request: NextRequest) {
     if (!vrm || typeof vrm !== "string" || vrm.trim().length === 0) {
       return NextResponse.json(
         { success: false, error: "Vehicle Registration Mark (VRM) is required." },
+        { status: 400 }
+      );
+    }
+
+    if (paymentMethod !== "Visa" && paymentMethod !== "Mastercard") {
+      return NextResponse.json(
+        { success: false, error: "Please select a valid payment method." },
         { status: 400 }
       );
     }
@@ -64,6 +81,7 @@ export async function POST(request: NextRequest) {
       planId: planId || "full",
       planName: planName || (planId === "basic" ? "Basic Check" : "Full Comprehensive"),
       price: price || (planId === "basic" ? "£49.99" : "£54.99"),
+      paymentMethod,
       paymentUrl:
         paymentUrl ||
         (planId === "basic"
